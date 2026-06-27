@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>PetCare Mobile App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="style.css">
+<script src="app.js"></script>
+
+</head>
+<body>
+
+<div class="phone" id="app">
+  <br>
+
+  <div class="topbar">
+    <div class="appname">PetCare</div>
+    <div class="top-actions">
+      <button class="icon-btn btn-alert" onclick="toggleTheme()"><i class="ti ti-moon" id="theme-icon"></i></button>
+      
+      <div style="position: relative; display: inline-block; cursor: pointer;">
+        <button class="icon-btn btn-alert" onclick="openNotifications()"><i class="ti ti-bell"></i></button>
+        <span id="alert-badge" style="display: none; position: absolute; top: -2px; right: -2px; background: var(--amber); color: #fff; font-size: 10px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; text-align: center; line-height: 16px; border: 2px solid #fff; pointer-events: none;">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <div id="home" class="screen active">
+      <div>
+        <div class="sec-label">Your Pets</div>
+        <div id="dynamic-pet-list"></div>
+
+        <button class="btn btn-outline" style="margin-top: 10px;" onclick="document.getElementById('add-pet-form').style.display='flex'">
+          <i class="ti ti-plus"></i> Add a new pet
+        </button>
+      </div>
+
+      <div id="add-pet-form" class="card" style="display: none; flex-direction: column; gap: 15px; border: 2px solid var(--blue); margin-top: 20px;">
+          <div class="sec-label" style="margin: 0; color: var(--blue);">Add New Pet Details</div>
+          
+          <select id="pet-type" onchange="updateBreeds()">
+                <option value="">Select Pet Type...</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+                <option value="Fish">Fish</option>
+                <option value="Rabbit">Rabbit</option>
+                <option value="Turtle">Turtle</option>
+                <option value="Other">Other</option>
+          </select>
+
+          <select id="pet-breed" disabled>
+              <option value="">Select Breed first...</option>
+          </select>
+
+          <input type="text" id="pet-name" placeholder="Pet's Name (e.g. Charlie)" />
+          <input type="text" id="pet-age" placeholder="Age (e.g. 2 months or 2.7 years)" />
+
+          <div style="display: flex; gap: 10px;">
+              <button class="btn btn-outline" style="flex: 1;" onclick="document.getElementById('add-pet-form').style.display='none'">Cancel</button>
+              <button class="btn btn-primary" style="flex: 1;" onclick="savePet()">Save Pet</button>
+          </div>
+      </div>
+    </div> 
+
+    <div id="notifications-view" class="screen">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <i class="ti ti-arrow-left" style="font-size: 22px; cursor: pointer; color: var(--text-2);" onclick="navTo('home', document.getElementById('nav-home'))"></i>
+        <h2 style="margin: 0; font-family: var(--font-display); color: var(--pawcare-brand); font-size: 20px;">Notifications</h2>
+      </div>
+      <div id="notification-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+    </div>
+
+    <div id="diet" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+        <div class="sec-label" style="margin: 0;">Diet Plan</div>
+      </div>
+      
+      <div class="card" style="display: flex; flex-direction: column; gap: 15px;">
+        
+        <select id="diet-pet-select" onchange="handlePetSelection()">
+          <option value="">Select Pet</option>
+        </select>
+
+        <input type="number" id="diet-weight" placeholder="Weight (kg)" />
+
+        <div style="display: flex; gap: 10px;">
+          <select id="diet-health" style="flex: 1;">
+            <option value="Normal">Normal / Healthy</option>
+            <option value="Overweight">Overweight</option>
+            <option value="Underweight">Underweight</option>
+            <option value="Joints">Joint Issues</option>
+            <option value="Digestion">Sensitive Stomach</option>
+            <option value="Kidney">Kidney / Renal Care</option>
+            <option value="Urinary">Urinary Tract Care</option>
+            <option value="Diabetes">Diabetic</option>
+          </select>
+
+          <select id="diet-allergies" style="flex: 1;">
+            <option value="None">No Allergies</option>
+            <option value="Poultry">Poultry (Chicken/Turkey)</option>
+            <option value="Beef">Beef</option>
+            <option value="Dairy">Dairy / Milk</option>
+            <option value="Grains">Grains / Wheat</option>
+            <option value="Fish">Fish / Seafood</option>
+            <option value="Soy">Soy / Corn</option>
+            <option value="Other">Other (Consult Vet)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" onclick="generateCustomDiet()">Generate Diet plan</button>
+      </div>
+
+      <div id="diet-results-section" style="display: none; margin-top: 10px;">
+        <div class="sec-label">Recommended diet</div>
+        <div class="card" id="diet-output-card" style="border: 1px solid var(--border);"></div>
+      </div>
+    </div>
+
+    <div id="detect" class="screen">
+        <div class="sec-label">Pet Disease Health Assistant</div>
+
+        <div class="card" style="margin-bottom: 15px; padding: 15px; border: 1px solid var(--blue); background: var(--blue-light);">
+            <label style="font-size: 13px; font-weight: bold; color: var(--blue-dark); display: block; margin-bottom: 8px;">
+                <i class="ti ti-stethoscope"></i> Who needs a checkup?
+            </label>
+            <select id="detect-pet-select" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--blue); font-size: 14px; background: var(--surface); color: var(--text); outline: none;">
+                <option value="">Select a pet first...</option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+            <button id="tab-cam" class="btn btn-primary" style="flex: 1; font-size: 12px; padding: 8px;" onclick="switchDetectMode('camera')">
+                <i class="ti ti-camera"></i> Camera
+            </button>
+            <button id="tab-upload" class="btn btn-outline" style="flex: 1; font-size: 12px; padding: 8px;" onclick="switchDetectMode('upload')">
+                <i class="ti ti-upload"></i> Upload
+            </button>
+            <button id="tab-text" class="btn btn-outline" style="flex: 1; font-size: 12px; padding: 8px;" onclick="switchDetectMode('text')">
+                <i class="ti ti-notes"></i> Symptoms
+            </button>
+        </div>
+
+        <div id="detect-cam-container" class="card" style="padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; border: 1px solid var(--border);">
+            <video id="camera-feed" autoplay playsinline style="width: 100%; height: 260px; background: #000; border-radius: var(--radius-sm); object-fit: cover; display: none;"></video>
+            <img id="camera-snapshot" style="width: 100%; height: 260px; border-radius: var(--radius-sm); object-fit: cover; display: none;" />
+            <canvas id="camera-canvas" style="display: none;"></canvas>
+
+            <div style="display: flex; gap: 10px; width: 100%;">
+                <button id="btn-start-camera" class="btn btn-primary" style="width: 100%;" onclick="startCamera()">
+                    <i class="ti ti-video"></i> Launch Live Camera
+                </button>
+                <button id="btn-take-photo" class="btn btn-primary" style="flex: 1; display: none; background: #16a34a; border-color: #15803d;" onclick="takePhoto()">
+                    <i class="ti ti-camera"></i> Capture Frame
+                </button>
+                <button id="btn-retake-photo" class="btn btn-outline" style="flex: 1; display: none;" onclick="retakePhoto()">
+                    <i class="ti ti-reload"></i> Retake
+                </button>
+            </div>
+        </div>
+
+        <div id="detect-upload-container" class="card" style="display: none; padding: 20px; text-align: center; border: 2px solid var(--blue-light);">
+            <i class="ti ti-photo-up" style="font-size: 40px; color: var(--blue); margin-bottom: 10px; display: block;"></i>
+            <label class="btn btn-outline" style="display: inline-block; cursor: pointer;">
+                Select Image From Gallery
+                <input type="file" id="detect-image-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)" />
+            </label>
+            <div id="upload-preview-container" style="display: none; margin-top: 15px;">
+                <img id="upload-preview" style="width: 100%; height: 200px; border-radius: var(--radius-sm); object-fit: cover;" />
+            </div>
+        </div>
+
+        <div id="detect-text-container" class="card" style="display: none; padding: 15px;">
+            <label style="font-size: 13px; font-weight: 500; margin-bottom: 5px; display: block; color: var(--text-2);">Describe what's wrong with your pet:</label>
+            <textarea id="detect-symptoms-input" rows="5" placeholder="E.g., My 2-year-old lab has been scratching his left ear constantly for 3 days. It looks red inside and has a slight odor..." style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-family: inherit; font-size: 14px; resize: none; margin-bottom: 15px;"></textarea>
+            <button class="btn btn-primary" style="width: 100%;" onclick="analyzePetHealth()">
+                <i class="ti ti-device-analytics"></i> Analyze Symptoms
+            </button>
+        </div>
+
+        <div id="ai-results-section" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+            <div id="detect-result-display">
+                </div>
+        </div>
+    </div>
+
+    <div id="vax" class="screen">
+      
+      <div id="vax-main-view">
+        <div class="sec-label">Vaccine Records</div>
+        <div id="vax-pet-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </div>
+
+      <div id="vax-detail-view" style="display: none; flex-direction: column;">
+        
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+          <i class="ti ti-arrow-left" style="font-size: 22px; cursor: pointer; color: var(--text-2);" onclick="closeVaxDetails()"></i>
+          <h2 id="vax-detail-title" style="margin: 0; font-family: var(--font-display); color: var(--pawcare-brand); font-size: 20px;">Pet Name</h2>
+        </div>
+
+        <div id="vax-recommendation-box" style="background: var(--blue-light); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 20px; font-size: 12px; color: var(--blue-dark); display: flex; gap: 10px; align-items: flex-start;">
+            <i class="ti ti-bulb" style="font-size: 18px; color: var(--blue);"></i>
+            <div id="vax-recommendation-text">Loading recommendations...</div>
+        </div>
+
+        <div id="vax-stats-container" style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <div class="card" style="flex: 1; padding: 10px; text-align: center; border: 1px solid var(--blue);">
+            <div id="stat-completed" style="font-size: 20px; font-weight: bold; color: var(--blue);">0</div>
+            <div style="font-size: 11px; color: var(--text-2);">Completed</div>
+          </div>
+          <div class="card" style="flex: 1; padding: 10px; text-align: center; border: 1px solid var(--amber-dark); background: var(--amber-light);">
+            <div id="stat-due" style="font-size: 20px; font-weight: bold; color: var(--amber-dark);">0</div>
+            <div style="font-size: 11px; color: var(--amber-dark);">Due Soon</div>
+          </div>
+          <div class="card" style="flex: 1; padding: 10px; text-align: center; border: 1px solid var(--border);">
+            <div id="stat-upcoming" style="font-size: 20px; font-weight: bold; color: var(--text);">0</div>
+            <div style="font-size: 11px; color: var(--text-2);">Upcoming</div>
+          </div>
+        </div>
+
+        <div id="vax-schedule-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;"></div>
+
+        <button id="vax-add-btn" class="btn btn-primary" style="width: 100%; border: 1px solid var(--border);" onclick="openAddVaxForm()">
+          + Add Vaccination Record
+        </button>
+      </div>
+
+      <div id="vax-add-view" class="card" style="display: none; flex-direction: column; gap: 15px; border: 2px solid var(--blue);">
+        <h3 style="font-size: 16px; margin: 0; color: var(--pawcare-brand);">Log New Vaccine</h3>
+        
+        <input type="text" id="new-vax-name" placeholder="Vaccine Name (e.g., Rabies Core)">
+        
+        <label style="font-size: 12px; color: var(--text-2); margin-bottom: -10px;">Date Administered / Due</label>
+        <input type="date" id="new-vax-date">
+        
+        <div style="display: flex; gap: 10px; margin-top: 5px;">
+          <button class="btn btn-outline" style="flex: 1;" onclick="closeAddVaxForm()">Cancel</button>
+          <button class="btn btn-primary" style="flex: 1;" onclick="saveNewVaccine()">Save</button>
+        </div>
+      </div>
+
+    </div>
+
+<div id="vets" class="screen">
+        
+        <div class="sec-label">Nearby Pet Centers</div>
+
+        <div id="map" style="width: 100%; height: 220px; border-radius: var(--radius-md); border: 1px solid var(--border); z-index: 1; margin-bottom: 15px;"></div>
+
+        <div id="clinic-list" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 30px;">
+            </div>
+
+    </div>
+
+    <div id="profile" class="screen">
+      <div style="display: flex; align-items: center; gap: 20px; padding: 20px 0;">
+        <div id="profile-initial" style="width: 70px; height: 70px; border-radius: 50%; background: var(--blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold;">?</div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+          <div id="profile-name" style="font-size: 22px; font-family: var(--font-display); color: var(--text);">Guest</div>
+          <i class="ti ti-pencil" style="color: var(--blue); cursor: pointer; font-size: 18px;" onclick="editUsername()"></i>
+        </div>
+          <div id="profile-email" style="color: var(--text-2); font-size: 14px;">Not logged in</div>
+        </div>
+      </div>
+
+      <div class="sec-label" style="margin-top: 10px;">Settings</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="pet-item" style="border-radius: var(--radius-sm); cursor: pointer;">
+          <span style="font-weight: 500;">Help</span> 
+          <i class="ti ti-help" style="color: var(--text-3); font-size: 20px;"></i>
+        </div>
+        <div class="pet-item" onclick="logout()" style="border-radius: var(--radius-sm); border-color: rgba(220, 38, 38, 0.3); cursor: pointer;">
+          <span style="font-weight: 500; color: #dc2626;">Logout</span> 
+          <i class="ti ti-logout" style="color: #dc2626; font-size: 20px;"></i>
+        </div>
+      </div>
+    </div>
+
+  </div> <div class="navbar">
+    <div class="nav-item active" id="nav-home" onclick="navTo('home', this)"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="nav-item" id="nav-diet" onclick="navTo('diet', this)"><i class="ti ti-salad"></i><span>Diet</span></div>
+    <div class="nav-item" id="nav-detect" onclick="navTo('detect', this)"><i class="ti ti-camera"></i><span>Detect</span></div>
+    <div class="nav-item" id="nav-vaccine" onclick="navTo('vax', this)"><i class="ti ti-vaccine"></i><span>Vax</span></div>
+    <div class="nav-item" id="nav-vets" onclick="navTo('vets', this)"><i class="ti ti-building-hospital"></i><span>Clinics</span></div>
+    <div class="nav-item" id="nav-profile" onclick="navTo('profile', this)"><i class="ti ti-user"></i><span>Profile</span></div>
+  </div>
+
+  <div id="pet-action-modal" class="modal-overlay" style="display: none;">
+      <div class="card" style="width: 85%; padding: 20px; border: 2px solid var(--blue);">
+          <h3 id="modal-pet-name" style="text-align: center; margin-bottom: 15px; font-family: var(--font-display); color: var(--pawcare-brand);">Pet Name</h3>
+          <p style="text-align: center; color: var(--text-2); font-size: 13px; margin-bottom: 20px;">What would you like to do?</p>
+          
+          <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+              <button class="btn btn-primary" style="flex: 1;" onclick="prepareUpdate()">Update</button>
+              <button class="btn" style="flex: 1; background: #fee2e2; color: #e93434; border: 1px solid #fca5a5;" onclick="confirmDelete()">Delete</button>
+          </div>
+          
+          <button class="btn" style="background: transparent; color: var(--text-3); border: 1px solid var(--border);" onclick="closePetModal()">Cancel</button>
+      </div>
+  </div>
+  
+  <div id="update-pet-modal" class="modal-overlay" style="display: none;">
+      <div class="card" style="width: 85%; padding: 20px; border: 2px solid var(--blue);">
+          <div class="sec-label" style="margin: 0 0 15px 0; color: var(--blue); text-align: center;">Update Pet Details</div>
+
+          <select id="update-pet-type" onchange="updateBreedsForEdit()" style="margin-bottom: 15px;">
+                <option value="">Select Pet Type...</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+                <option value="Fish">Fish</option>
+                <option value="Rabbit">Rabbit</option>
+                <option value="Turtle">Turtle</option>
+                <option value="Other">Other</option>
+          </select>
+
+          <select id="update-pet-breed" style="margin-bottom: 15px;">
+              <option value="">Select Breed...</option>
+          </select>
+
+          <input type="text" id="update-pet-name" placeholder="Pet's Name" style="margin-bottom: 15px;" />
+          <input type="text" id="update-pet-age" placeholder="Age (e.g. 2 months)" />
+
+          <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button class="btn btn-outline" style="flex: 1;" onclick="document.getElementById('update-pet-modal').style.display='none'">Cancel</button>
+              <button class="btn btn-primary" style="flex: 1;" onclick="submitUpdate()">Save Changes</button>
+          </div>
+      </div>
+  </div>
+
+  <div id="edit-username-modal" class="modal-overlay" style="display: none;">
+      <div class="card" style="width: 85%; padding: 20px; border: 2px solid var(--blue);">
+          <div class="sec-label" style="margin: 0 0 15px 0; color: var(--blue); text-align: center;">Edit Username</div>
+          
+          <input type="text" id="new-username-input" placeholder="Enter new username" style="margin-bottom: 5px;" />
+          <div id="username-error" style="display: none; color: #de4141; font-size: 12px; text-align: center; margin-bottom: 10px;">Username cannot be empty.</div>
+
+          <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button class="btn btn-outline" style="flex: 1;" onclick="closeEditUsernameModal()">Cancel</button>
+              <button class="btn btn-primary" style="flex: 1;" onclick="saveNewUsername()">Save Changes</button>
+          </div>
+      </div>
+  </div>
+  <div id="app-alert-modal" class="modal-overlay" style="display: none; z-index: 999999;">
+      <div class="card" id="app-alert-card" style="width: 80%; max-width: 320px; padding: 25px 20px; text-align: center; border: 2px solid var(--blue); box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+          <div id="app-alert-icon" style="font-size: 48px; margin-bottom: 15px;"></div>
+          <div id="app-alert-message" style="color: var(--text); font-size: 15px; margin-bottom: 25px; line-height: 1.5; font-weight: 500;"></div>
+          <button id="app-alert-btn" class="btn btn-primary" style="width: 100%; font-weight: bold;" onclick="closeAppAlert()">OK</button>
+      </div>
+  </div>
+
+  <div id="app-confirm-modal" class="modal-overlay" style="display: none; z-index: 999999;">
+      <div class="card" style="width: 80%; max-width: 320px; padding: 25px 20px; text-align: center; border: 2px solid var(--amber-dark); box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+          <div style="font-size: 48px; color: var(--amber-dark); margin-bottom: 15px;">
+              <i class="ti ti-alert-triangle"></i>
+          </div>
+          <div id="app-confirm-message" style="color: var(--text); font-size: 15px; margin-bottom: 25px; line-height: 1.5; font-weight: 500;">Are you sure?</div>
+          <div style="display: flex; gap: 10px;">
+              <button class="btn btn-outline" style="flex: 1; font-weight: bold;" onclick="closeAppConfirm()">Cancel</button>
+              <button class="btn btn-primary" id="app-confirm-yes-btn" style="flex: 1; background: #e93434; border: none; font-weight: bold;" onclick="executeAppConfirm()">Yes, Delete</button>
+          </div>
+      </div>
+  </div>
+</div>
+</body>
+</html>

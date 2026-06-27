@@ -1,0 +1,114 @@
+/* --- CSS VARIABLES & THEME --- */
+:root {
+    --blue: #185FA5; 
+    --blue-light: #E6F1FB; 
+    --blue-dark: #0d3863;
+    --amber: #EF9F27; --amber-light: #FAEEDA; --amber-dark: #854F0B;
+    --bg: #ffffff; 
+    --surface: #ffffff; 
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1a1a; 
+    --text-2: #6b6b6b; 
+    --text-3: #aaa;
+    --pawcare-brand: #0d3863; 
+    --radius: 14px; --radius-sm: 8px;
+    --font: 'Poppins', sans-serif; 
+    --font-display: 'Poppins', sans-serif;
+  }
+
+[data-theme="dark"] {
+    --bg: #37363a; 
+    --surface: #434247; 
+    --border: rgba(0, 0, 0, 0.08);
+    --text: #f1f5f9;
+    --text-2: #cbd5e1;
+    --text-3: #ffffff;
+    --pawcare-brand: #5ea5f6; 
+    --blue: #537295; 
+    --blue-dark: #537295; 
+    --blue-light: rgba(96, 165, 250, 0.15);
+    --amber-light: rgba(239, 159, 39, 0.15);
+  }
+  
+  /* --- GLOBAL STYLES --- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body { 
+    font-family: var(--font); 
+    background: var(--bg); 
+    margin: 0; 
+    padding: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    overflow: hidden; 
+  }
+  
+  /* --- APP CONTAINER (Now Full Screen) --- */
+  .phone { 
+    width: 100%; 
+    height: 100%; 
+    background: var(--bg); 
+    color: var(--text);
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* --- HEADER & NAVIGATION --- */
+  .status-bar { padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .status-bar span { font-size: 13px; font-weight: 600; color: var(--text); }
+  .status-icons { display: flex; gap: 6px; align-items: center; color: var(--text); }
+  
+  .topbar { padding: 15px 24px; display: flex; align-items: center; justify-content: space-between; background: var(--bg); position: sticky; top: 0; z-index: 10;}
+  .appname { font-family: var(--font-display); font-size: 26px;font-weight:600; color: var(--pawcare-brand); }
+  
+  .top-actions { display: flex; gap: 10px; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 20px; transition: 0.2s;}
+  .icon-btn:active { transform: scale(0.95); }
+  .btn-alert { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); }
+
+  /* --- CONTENT SCREENS --- */
+  .content { flex: 1; overflow-y: auto; padding: 0 24px 24px; display: flex; flex-direction: column; gap: 20px; }
+  .content::-webkit-scrollbar { display: none; }
+  
+  .screen { display: none; flex-direction: column; gap: 20px; animation: fadeIn 0.2s ease; }
+  .screen.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  .sec-label { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 12px; font-family: var(--font-display); }
+  
+  /* --- UI COMPONENTS --- */
+  input, select, textarea { width: 100%; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--surface); color: var(--text); font-family: var(--font); outline: none;}
+  input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+  
+  .btn { width: 100%; padding: 14px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); transition: 0.2s;}
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
+  
+  .search-wrap { position: relative; }
+  .search-wrap input { padding-left: 40px; background: var(--surface); border-radius: 30px; }
+  .search-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--text-3); }
+
+  .pet-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); margin-bottom: 10px; cursor: pointer; transition: 0.2s;}
+  .pet-item:active { transform: scale(0.98); }
+  .pet-info { display: flex; align-items: center; gap: 15px; }
+  .pet-icon { width: 45px; height: 45px; border-radius: 50%; background: var(--blue-light); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 24px;}
+  .pet-name { font-size: 16px; font-weight: 600; color: var(--text); }
+  .pet-type { font-size: 13px; color: var(--text-2); text-transform: capitalize; }
+
+  .card { background: var(--surface); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); }
+  
+  /* --- BOTTOM NAVBAR --- */
+  .navbar { display: flex; border-top: 1px solid var(--border); padding: 12px 5px 20px; background: var(--surface); justify-content: space-between;}
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px; color: var(--text-3); }
+  .nav-item i { font-size: 22px; }
+  .nav-item span { font-size: 10px; font-weight: 500; }
+  .nav-item.active { color: var(--blue); }
+
+  /* --- MODAL CSS --- */
+  .modal-overlay {
+      display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
+      background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; animation: fadeIn 0.2s;
+  }

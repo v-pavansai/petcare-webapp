@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>PetCare - Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+<style>
+  :root {
+    --blue: #185FA5; 
+    --blue-light: #E6F1FB; 
+    --blue-dark: #185fa5;
+    --amber: #EF9F27; --amber-light: #FAEEDA; --amber-dark: #854F0B;
+    --bg: #ffffff; 
+    --surface: #ffffff; 
+    --card-bg: rgba(255, 255, 255, 0.85); 
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1a1a; 
+    --text-2: #6b6b6b; 
+    --text-3: #aaa;
+    --pawcare-brand: #185fa5; 
+    --radius: 14px; --radius-sm: 8px;
+    --font: 'Poppins', sans-serif; 
+    --font-display: 'Poppins', sans-serif;
+    
+    --bg-overlay: rgba(255, 255, 255, 0.50); 
+    /* Reduced Shadow */
+    --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); 
+  }
+
+  [data-theme="dark"] {
+    --bg: #37363a; 
+    --surface: #434247; 
+    --card-bg: rgba(67, 66, 71, 0.85); 
+    --border: rgba(0, 0, 0, 0.08);
+    --text: #f1f5f9;
+    --text-2: #cbd5e1;
+    --text-3: #ffffff;
+    --pawcare-brand: #5ea5f6; 
+    --blue: #537295; 
+    --blue-dark: #537295; 
+    --blue-light: rgba(96, 165, 250, 0.15);
+    --amber-light: rgba(239, 159, 39, 0.15);
+    
+    --bg-overlay: rgba(55, 54, 58, 0.75); 
+    /* Reduced Shadow */
+    --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  /* Forced Full Screen */
+  body { 
+    font-family: var(--font); 
+    margin: 0; 
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Removed Desktop Mockup UI */
+  .phone { 
+    width: 100%; 
+    height: 100%; 
+    background-color: var(--bg); 
+    background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg.png'); /* Ensure this matches your image file */
+    background-size: cover;
+    background-position: center;
+    color: var(--text);
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .status-bar { padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: center; }
+  .status-bar span { font-size: 13px; font-weight: 600; color: var(--text); transition: color 0.3s ease; }
+  .status-icons { display: flex; gap: 6px; align-items: center; color: var(--text); transition: color 0.3s ease;}
+  
+  .topbar { padding: 15px 24px; display: flex; align-items: center; justify-content: space-between; background: transparent; position: sticky; top: 0; z-index: 10; transition: background-color 0.3s ease;}
+  .appname { font-family: var(--font-display); font-size: 24px; color: var(--pawcare-brand); transition: color 0.3s ease; }
+  
+  .top-actions { display: flex; gap: 10px; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 20px; transition: 0.2s;}
+  .icon-btn:active { transform: scale(0.95); }
+  .btn-alert { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+  .content { flex: 1; overflow-y: auto; padding: 40px 24px 24px; display: flex; flex-direction: column; justify-content: flex-start;}
+  .content::-webkit-scrollbar { display: none; }
+  
+  .sec-label { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px; font-family: var(--font-display); transition: color 0.3s ease;}
+  
+  input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--surface); color: var(--text); font-family: var(--font); outline: none; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;}
+  input:focus { border-color: var(--blue); }
+  
+  .btn { width: 100%; padding: 14px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); transition: opacity 0.15s, transform 0.1s, background-color 0.3s ease; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--blue); color: #fff; }
+
+  .card { 
+    background: var(--card-bg); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius); 
+    padding: 24px 20px; 
+    border: 1px solid var(--border); 
+    box-shadow: var(--card-shadow); 
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px;
+  }
+  
+  .toggle-container {
+    display: flex;
+    position: relative;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 200px;
+    margin: -12px auto 6px auto;
+    padding: 4px;
+    box-shadow: var(--card-shadow);
+  }
+  .toggle-bg {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    background: var(--blue-light);
+    border-radius: 16px;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  .toggle-btn {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    z-index: 1;
+    line-height: 28px;
+    transition: color 0.3s ease;
+  }
+  .toggle-btn.active { color: var(--blue-dark); }
+
+  .otp-container { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; margin-bottom: 5px; }
+  .otp-box { width: 45px; height: 50px; text-align: center; font-size: 20px; font-weight: 600; padding: 0; margin-bottom: 0; }
+  
+  #step-2, #step-3 { display: none; animation: fadeIn 0.3s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Brand logo - Cleaned up */
+  .header-logo { 
+      text-align: center; 
+      margin-top: 1px;
+      margin-bottom: 15px;
+      align-self: center;
+  }
+  .header-logo i { font-size: 48px; color: var(--blue); }
+  .header-logo h1 { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--pawcare-brand); margin-top: 5px; }
+
+  /* Subtle highlight in Dark Mode instead of heavy text-shadow */
+  [data-theme="dark"] .header-logo h1 {
+      text-shadow: 0 0 10px rgba(94, 165, 246, 0.3);
+      color: var(--pawcare-brand);
+  }
+
+  .forgot-link {
+    text-align: left;
+    font-size: 13px;
+    color: var(--blue);
+    cursor: pointer;
+    margin-top: -5px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    display: none;
+    transition: 0.2s;
+  }
+  .forgot-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="phone" id="app">
+  
+<br>
+
+  <div class="topbar">
+    <div class="appname"></div> 
+    <div class="top-actions">
+      <button class="icon-btn btn-alert" onclick="toggleTheme()"><i class="ti ti-moon" id="theme-icon"></i></button>
+    </div>
+  </div>
+
+  <div class="content">
+    
+    <div class="header-logo">
+      <i class="ti ti-paw"></i>
+      <h1>PetCare</h1>
+    </div>
+
+    <div class="toggle-container" id="main-toggle">
+      <div id="toggle-bg" class="toggle-bg"></div>
+      <div id="tab-login" class="toggle-btn active" onclick="switchMode('login')">Login</div>
+      <div id="tab-signup" class="toggle-btn" onclick="switchMode('signup')">Sign up</div>
+    </div>
+
+    <div class="card" id="step-1">
+      <div class="sec-label" id="form-title" style="margin-bottom: 15px; text-align: center; font-size: 24px;">Login</div>
+      
+      <div id="error-message" style="display: none; color: #dc2626; margin-bottom: 15px; font-size: 14px; text-align: center; font-weight: 600;"></div>
+      
+      <input type="email" id="email" placeholder="Email address" />
+      <input type="text" id="username" placeholder="Username" style="display: none;" />
+      <input type="password" id="password" placeholder="Enter password" />
+      
+      <div id="forgot-password-link" class="forgot-link" onclick="triggerForgotPassword()">Forgot Password?</div>
+
+      <button class="btn btn-primary" id="btn-send-otp" onclick="handleAuthStep()" style="margin-top: 5px;">
+        Verify & Send OTP
+      </button>
+
+      <p id="back-to-login" style="display: none; font-size: 14px; color: var(--text-2); text-align: center; margin-top: 10px; cursor: pointer; font-weight: 500;" onclick="switchMode('login')">Back to Login</p>
+    </div>
+
+    <div class="card" id="step-2">
+      <div class="sec-label" style="margin-bottom: 0; text-align: center; font-size: 24px;">Verify</div>
+      <p style="font-size: 14px; color: var(--text-2); text-align: center; margin-top: 0; margin-bottom: 5px;">Enter the code sent to your email</p>
+
+      <div id="otp-error-message" style="display: none; color: #dc2626; margin-bottom: 10px; font-size: 14px; text-align: center; font-weight: 600;"></div>
+
+      <div class="otp-container" id="otp-inputs">
+        <input type="text" class="otp-box" maxlength="1" oninput="moveToNext(this, 0)" onkeydown="handleBackspace(event, 0)" />
+        <input type="text" class="otp-box" maxlength="1" oninput="moveToNext(this, 1)" onkeydown="handleBackspace(event, 1)" />
+        <input type="text" class="otp-box" maxlength="1" oninput="moveToNext(this, 2)" onkeydown="handleBackspace(event, 2)" />
+        <input type="text" class="otp-box" maxlength="1" oninput="moveToNext(this, 3)" onkeydown="handleBackspace(event, 3)" />
+        <input type="text" class="otp-box" maxlength="1" oninput="moveToNext(this, 4)" onkeydown="handleBackspace(event, 4)" />
+        <input type="text" class="otp-box" maxlength="1" oninput="moveToNext(this, 5)" onkeydown="handleBackspace(event, 5)" />
+      </div>
+
+      <button class="btn btn-primary" onclick="verifyOTP()" style="margin-top: 10px;">
+        Confirm Code
+      </button>
+
+      <p id="resend-text" style="font-size: 14px; color: var(--text-2); text-align: center; margin-top: 15px; cursor: pointer; transition: 0.3s;" onclick="triggerResend()">Resend OTP in 60s</p>
+      <p style="font-size: 14px; color: var(--blue); text-align: center; margin-top: 10px; cursor: pointer; font-weight: 500;" onclick="editEmail()">Wrong email? Go back</p>
+    </div>
+
+    <div class="card" id="step-3">
+      <div class="sec-label" style="margin-bottom: 15px; text-align: center; font-size: 24px;">New Password</div>
+      <p id="step-3-subtitle" style="font-size: 13px; color: var(--text-2); text-align: center; margin-top: -10px; margin-bottom: 15px;">Create a strong new password</p>
+
+      <div id="reset-form-container">
+          <input type="password" id="new-password" placeholder="Enter new password" />
+          <input type="password" id="confirm-password" placeholder="Confirm new password" />
+          
+          <div id="reset-error-message" style="display: none; color: #dc2626; margin-bottom: 10px; font-size: 14px; text-align: center; font-weight: 600;"></div>
+
+          <button class="btn btn-primary" id="btn-update-password" onclick="updatePassword()" style="margin-top: 5px;">
+            Update Password
+          </button>
+      </div>
+
+      <div id="reset-success-message" style="display: none; text-align: center; padding: 10px 0;">
+          <div style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px;">
+              <i class="ti ti-check"></i>
+          </div>
+          <div style="color: #16a34a; font-weight: 600; font-size: 18px; margin-bottom: 5px;">Password Updated!</div>
+          <div style="color: var(--text-2); font-size: 13px;">Redirecting to login...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ==========================================
+  // SERVER URL 
+  // ==========================================
+  const API_URL = "http://127.0.0.1:8000"; 
+
+  // 1. Initial Setup
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('pawcare_theme');
+    const appContainer = document.getElementById('app');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+      appContainer.setAttribute('data-theme', 'dark');
+      if (themeIcon) themeIcon.className = 'ti ti-sun';
+    }
+    const alreadyLoggedIn = localStorage.getItem('pawcare_user_email');
+    if (alreadyLoggedIn) {
+        window.location.replace("index.html"); 
+    }
+  });
+
+  function toggleTheme() {
+    const appContainer = document.getElementById('app');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (appContainer.getAttribute('data-theme') === 'dark') {
+      appContainer.removeAttribute('data-theme');
+      if (themeIcon) themeIcon.className = 'ti ti-moon';
+      localStorage.setItem('pawcare_theme', 'light');
+    } else {
+      appContainer.setAttribute('data-theme', 'dark');
+      if (themeIcon) themeIcon.className = 'ti ti-sun';
+      localStorage.setItem('pawcare_theme', 'dark');
+    }
+  }
+
+  // --- MODE LOGIC ---
+  let currentMode = 'login';
+  
+  function switchMode(mode) {
+    currentMode = mode;
+    const bg = document.getElementById('toggle-bg');
+    const tabLogin = document.getElementById('tab-login');
+    const tabSignup = document.getElementById('tab-signup');
+    const title = document.getElementById('form-title');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const errorBox = document.getElementById('error-message');
+    const forgotLink = document.getElementById('forgot-password-link');
+    const mainToggle = document.getElementById('main-toggle');
+    const backBtn = document.getElementById('back-to-login');
+    const btnSend = document.getElementById('btn-send-otp');
+    
+    errorBox.style.display = 'none';
+    forgotLink.style.display = 'none';
+    passwordInput.style.display = 'block';
+    mainToggle.style.display = 'flex';
+    backBtn.style.display = 'none';
+
+    if (mode === 'login') {
+      bg.style.transform = 'translateX(0)';
+      tabLogin.classList.add('active');
+      tabSignup.classList.remove('active');
+      title.innerText = 'Login';
+      usernameInput.style.display = 'none';
+      passwordInput.placeholder = 'Enter password';
+      btnSend.innerText = "Verify & Send OTP";
+    } else if (mode === 'signup') {
+      bg.style.transform = 'translateX(100%)';
+      tabSignup.classList.add('active');
+      tabLogin.classList.remove('active');
+      title.innerText = 'Create Account';
+      usernameInput.style.display = 'block';
+      passwordInput.placeholder = 'Create password';
+      btnSend.innerText = "Register & Send OTP";
+    } else if (mode === 'forgot') {
+      title.innerText = 'Reset Password';
+      usernameInput.style.display = 'none';
+      passwordInput.style.display = 'none'; 
+      mainToggle.style.display = 'none'; 
+      backBtn.style.display = 'block';
+      btnSend.innerText = "Send Reset Code";
+    }
+  }
+
+  function triggerForgotPassword() {
+    switchMode('forgot');
+  }
+
+  let timerInterval;
+  let activeUsernameToSave = "User";
+
+  // --- 2. AUTHENTICATION & SENDING OTP ---
+  async function handleAuthStep() {
+    const email = document.getElementById('email').value.trim();
+    const username = document.getElementById('username').value.trim(); 
+    const password = document.getElementById('password').value.trim(); 
+    const errorBox = document.getElementById('error-message');
+    const forgotLink = document.getElementById('forgot-password-link');
+    const mainToggle = document.getElementById('main-toggle');
+
+    errorBox.style.display = 'none';
+    forgotLink.style.display = 'none';
+
+    if(email === "") {
+      showError("Please enter your Email.");
+      return;
+    }
+
+    if(currentMode !== 'forgot' && password === "") {
+      showError("Please enter your Password.");
+      return;
+    }
+
+    if(currentMode === 'signup' && username === "") {
+      showError("Please enter a Username to sign up.");
+      return;
+    }
+
+    activeUsernameToSave = (currentMode === 'signup') ? username : "User";
+    const btn = document.getElementById('btn-send-otp');
+    const originalText = btn.innerText;
+    btn.innerHTML = '<i class="ti ti-loader" style="display:inline-block; animation: spin 1s linear infinite;"></i> Processing...';
+    btn.disabled = true;
+
+    try {
+        if (currentMode === 'login') {
+            const authResponse = await fetch(`${API_URL}/api/check-credentials`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: password })
+            });
+
+            if (!authResponse.ok) {
+                showError("Wrong Credentials!");
+                forgotLink.style.display = 'block'; 
+                btn.innerText = originalText;
+                btn.disabled = false;
+                return;
+            }
+        }
+
+        const otpResponse = await fetch(`${API_URL}/api/send-otp`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, purpose: currentMode })
+        });
+
+        const data = await otpResponse.json();
+
+        if (otpResponse.ok) {
+            document.getElementById('step-1').style.display = 'none';
+            document.getElementById('step-2').style.display = 'flex';
+            mainToggle.style.display = 'none';
+            
+            document.querySelectorAll('.otp-box')[0].focus();
+            startCooldownTimer();
+        } else {
+            showError(data.detail || "An error occurred.");
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    } catch (error) {
+        showError("Cannot connect to server. Is FastAPI running?");
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+  }
+
+  function showError(msg) {
+      const errorBox = document.getElementById('error-message');
+      errorBox.innerText = msg;
+      errorBox.style.display = 'block';
+  }
+
+  // --- 3. The 60-Second Cooldown Timer ---
+  function startCooldownTimer() {
+      const resendText = document.getElementById('resend-text');
+      let timeLeft = 60;
+      
+      resendText.style.pointerEvents = 'none';
+      resendText.style.color = 'var(--text-3)';
+      
+      clearInterval(timerInterval);
+      
+      timerInterval = setInterval(() => {
+          resendText.innerText = `Resend OTP in ${timeLeft}s`;
+          timeLeft--;
+
+          if (timeLeft < 0) {
+              clearInterval(timerInterval);
+              resendText.innerHTML = "<b>Didn't receive it? Resend OTP</b>";
+              resendText.style.pointerEvents = 'auto'; 
+              resendText.style.color = 'var(--blue)';
+          }
+      }, 1000);
+  }
+
+  // --- 4. Trigger Resend ---
+  async function triggerResend() {
+      const email = document.getElementById('email').value;
+      const resendText = document.getElementById('resend-text');
+      const errorBox = document.getElementById('otp-error-message');
+      
+      resendText.innerText = "Sending...";
+      resendText.style.pointerEvents = 'none';
+      resendText.style.color = 'var(--text-3)';
+      errorBox.style.display = 'none';
+
+      try {
+          const response = await fetch(`${API_URL}/api/send-otp`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email, purpose: currentMode })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+              document.querySelectorAll('.otp-box').forEach(box => box.value = "");
+              document.querySelectorAll('.otp-box')[0].focus();
+              
+              errorBox.innerText = "A fresh OTP has been sent to your email!";
+              errorBox.style.color = "#16a34a"; 
+              errorBox.style.display = 'block';
+              
+              startCooldownTimer();
+          } else {
+              errorBox.innerText = data.detail;
+              errorBox.style.color = "#dc2626"; 
+              errorBox.style.display = 'block';
+              startCooldownTimer(); 
+          }
+      } catch (error) {
+          errorBox.innerText = "Cannot connect to server.";
+          errorBox.style.color = "#dc2626";
+          errorBox.style.display = 'block';
+          resendText.innerHTML = "<b>Didn't receive it? Resend OTP</b>";
+          resendText.style.pointerEvents = 'auto';
+          resendText.style.color = 'var(--blue)';
+      }
+  }
+
+  // --- 5. OTP Box UX Handling ---
+  function moveToNext(currentInput, index) {
+    const inputs = document.querySelectorAll('.otp-box');
+    currentInput.value = currentInput.value.replace(/[^0-9]/g, '');
+    if (currentInput.value.length === 1 && index < 5) {
+      inputs[index + 1].focus();
+    }
+  }
+
+  function handleBackspace(event, index) {
+    const inputs = document.querySelectorAll('.otp-box');
+    if (event.key === 'Backspace' && event.target.value === '' && index > 0) {
+      inputs[index - 1].focus();
+    }
+  }
+
+  // --- 6. Verify OTP & Finalize Login/Reset ---
+  async function verifyOTP() {
+    const inputs = document.querySelectorAll('.otp-box');
+    const email = document.getElementById('email').value;
+    const errorBox = document.getElementById('otp-error-message');
+    
+    errorBox.style.color = "#dc2626"; 
+    errorBox.style.display = 'none';
+    
+    let otpCode = "";
+    inputs.forEach(input => otpCode += input.value);
+
+    if(otpCode.length < 6) {
+      errorBox.innerText = "Please fill in all 6 digits of the OTP.";
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    try {
+        const endpoint = currentMode === 'forgot' ? `${API_URL}/api/verify-otp` : `${API_URL}/api/verify-login`;
+        const payload = { email: email, otp_code: otpCode };
+        
+        if (currentMode === 'signup') {
+            payload.username = activeUsernameToSave;
+            payload.password = document.getElementById('password').value; 
+        }
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            if (currentMode === 'forgot') {
+                document.getElementById('step-2').style.display = 'none';
+                document.getElementById('step-3').style.display = 'flex';
+                window.verifiedResetOtp = otpCode; 
+            } else {
+                localStorage.setItem('pawcare_user_name', data.username || activeUsernameToSave);
+                localStorage.setItem('pawcare_user_email', email);
+                window.location.href = "index.html";
+            }
+        } else {
+            errorBox.innerText = data.detail || "Invalid OTP";
+            errorBox.style.display = 'block';
+            inputs.forEach(input => input.value = "");
+            inputs[0].focus();
+        }
+    } catch (error) {
+        errorBox.innerText = "Cannot connect to server. Is FastAPI running?";
+        errorBox.style.display = 'block';
+    }
+  }
+
+  // --- 7. Finalize Password Reset (Step 3) ---
+  async function updatePassword() {
+      const p1 = document.getElementById('new-password').value;
+      const p2 = document.getElementById('confirm-password').value;
+      const email = document.getElementById('email').value;
+      const errorBox = document.getElementById('reset-error-message');
+      const btn = document.getElementById('btn-update-password');
+
+      errorBox.style.display = 'none';
+
+      if (p1.length < 6) {
+          errorBox.innerText = "Password must be at least 6 characters.";
+          errorBox.style.display = 'block';
+          return;
+      }
+
+      if (p1 !== p2) {
+          errorBox.innerText = "Passwords do not match.";
+          errorBox.style.display = 'block';
+          return;
+      }
+
+      btn.innerHTML = '<i class="ti ti-loader" style="display:inline-block; animation: spin 1s linear infinite;"></i> Updating...';
+      btn.disabled = true;
+
+      try {
+          const response = await fetch(`${API_URL}/api/reset-password`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email, otp_code: window.verifiedResetOtp, new_password: p1 })
+          });
+
+          if (response.ok) {
+              document.getElementById('reset-form-container').style.display = 'none';
+              document.getElementById('step-3-subtitle').style.display = 'none';
+              document.getElementById('reset-success-message').style.display = 'block';
+              
+              setTimeout(() => {
+                  window.location.reload(); 
+              }, 2000);
+          } else {
+              const data = await response.json();
+              errorBox.innerText = data.detail || "Failed to reset password.";
+              errorBox.style.display = 'block';
+              btn.innerHTML = 'Update Password';
+              btn.disabled = false;
+          }
+      } catch (error) {
+          errorBox.innerText = "Server connection error.";
+          errorBox.style.display = 'block';
+          btn.innerHTML = 'Update Password';
+          btn.disabled = false;
+      }
+  }
+
+  // --- GO BACK & EDIT EMAIL ---
+  function editEmail() {
+      document.getElementById('step-2').style.display = 'none';
+      document.getElementById('step-1').style.display = 'flex';
+      
+      if (currentMode !== 'forgot') {
+          document.getElementById('main-toggle').style.display = 'flex'; 
+      }
+      
+      document.querySelectorAll('.otp-box').forEach(box => box.value = "");
+      clearInterval(timerInterval);
+      document.getElementById('error-message').style.display = 'none';
+      
+      const btn = document.getElementById('btn-send-otp');
+      btn.innerText = currentMode === 'forgot' ? 'Send Reset Code' : (currentMode === 'login' ? 'Verify & Send OTP' : 'Register & Send OTP');
+      btn.disabled = false;
+  }
+</script>
+</body>
+</html>
