@@ -378,7 +378,7 @@
   let activeUsernameToSave = "User";
 
   // --- 2. AUTHENTICATION & SENDING OTP ---
-  async function handleAuthStep() {
+async function handleAuthStep() {
     const email = document.getElementById('email').value.trim();
     const username = document.getElementById('username').value.trim(); 
     const password = document.getElementById('password').value.trim(); 
@@ -401,6 +401,12 @@
 
     if(currentMode === 'signup' && username === "") {
       showError("Please enter a Username to sign up.");
+      return;
+    }
+
+    // 🔴 NEW FIX: Check password length IMMEDIATELY during sign up
+    if(currentMode === 'signup' && password.length < 8) {
+      showError("Password must be at least 8 characters long.");
       return;
     }
 
