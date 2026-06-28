@@ -404,7 +404,6 @@ async function handleAuthStep() {
       return;
     }
 
-    // 🔴 NEW FIX: Check password length IMMEDIATELY during sign up
     if(currentMode === 'signup' && password.length < 8) {
       showError("Password must be at least 8 characters long.");
       return;
@@ -618,8 +617,8 @@ async function handleAuthStep() {
 
       errorBox.style.display = 'none';
 
-      if (p1.length < 6) {
-          errorBox.innerText = "Password must be at least 6 characters.";
+      if (p1.length < 8) {
+          errorBox.innerText = "Password must be at least 8 characters.";
           errorBox.style.display = 'block';
           return;
       }
