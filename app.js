@@ -950,9 +950,10 @@ async function executeBackendDiagnostic() {
         aiOutput.innerHTML = `
             <div style="background: ${cardBg}; padding: 20px; border-radius: 12px; border: 2px solid ${cardBorder}; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
                 <h4 style="color: ${titleColor}; margin-top: 0; margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid ${cardBorder}; padding-bottom: 10px;">
-                    <i class="ti ${titleIcon}" style="color: ${iconColor}; font-size: 18px; vertical-align: bottom;"></i> AI Diagnostic Report
+                    <i class="ti ${titleIcon}" style="color: ${iconColor}; font-size: 18px; vertical-align: bottom;"></i> 
+                    <span style="font-weight: bold;">AI Diagnostic Report</span>
                 </h4>
-                <div style="font-size: 15px; line-height: 1.6; color: #334155;">
+                <div style="font-size: 15px; line-height: 1.6; color: #334155; font-weight: bold;">
                     ${cleanText}
                 </div>
             </div>
