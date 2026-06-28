@@ -251,6 +251,9 @@ def _validate_password_strength(password: str):
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters.")
 
 # ── AUTH ROUTES ───────────────────────────────────────────────────────────────
+@app.get("/")
+async def welcome():
+    return {"message": "Welcome to the PetCare API!"}
 
 @app.post("/api/check-credentials")
 async def check_credentials(request: LoginRequest, db: Session = Depends(get_db)):
@@ -393,6 +396,50 @@ async def update_pet(pet_id: int, request: PetUpdate, db: Session = Depends(get_
     pet.pet_type, pet.breed, pet.name, pet.age = request.pet_type, request.breed, request.name, request.age
     db.commit()
     return {"message": "Pet updated successfully!"}
+
+@app.get("/api/diet/{email}")
+async def get_diet_plan(email: str, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
+    if email.lower().strip() != current_email:
+        raise HTTPException(status_code=403, detail="Access denied.")
+    
+    # Fetch pets using the securely verified current_email
+    pets = db.query(Pet).filter(Pet.owner_email == current_email).all()
+    if not pets:
+        return {"diets": []}
+
+    diet_plans = []
+    for pet in pets:
+        food_type = "Standard Pet Food"
+        meals     = "2 times a day"
+        avoid     = "Human junk food, overly spicy food"
+
+        if pet.pet_type == "Dog":
+            avoid = "Chocolate, Grapes, Onions, Garlic, Indian Sweets (high sugar/ghee)"
+            if "month" in pet.age.lower():
+                food_type = "Puppy Kibble (e.g., Drools Puppy or Pedigree PRO) mixed with a little warm water or plain curd."
+                meals     = "3 to 4 small meals a day"
+            else:
+                food_type = "Adult Dog Food (e.g., Royal Canin, Purepet) or home-cooked plain boiled chicken and rice."
+        elif pet.pet_type == "Cat":
+            avoid = "Dairy (Milk can cause upset stomachs), Raw Fish, Spiced Meats"
+            if "month" in pet.age.lower():
+                food_type = "Kitten Wet/Dry Mix (e.g., Whiskas Kitten or Meat Up). Can mix with plain unseasoned boiled chicken broth."
+                meals     = "3 times a day"
+            else:
+                food_type = "Adult Cat Food (e.g., Drools, Whiskas) or freshly boiled, de-boned local white fish."
+        elif pet.pet_type == "Bird":
+            avoid     = "Avocado, Apple Seeds, Caffeine, Salty Snacks"
+            food_type = "Local Seed Mix (Bajra/Kangni), soaked chana, and fresh local fruits like papaya or guava."
+            meals     = "Available all day (Refill daily)"
+
+        diet_plans.append({
+            "pet_name": pet.name,
+            "pet_type": pet.pet_type,
+            "food":     food_type,
+            "meals":    meals,
+            "avoid":    avoid,
+        })
+    return {"diets": diet_plans}
 
 @app.post("/api/vaccines")
 async def create_vaccine(vax: VaccineCreate, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
