@@ -251,9 +251,6 @@ def _validate_password_strength(password: str):
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters.")
 
 # ── AUTH ROUTES ───────────────────────────────────────────────────────────────
-@app.get("/")
-async def welcome():
-    return {"message": "Welcome to the PetCare API!"}
 
 @app.post("/api/check-credentials")
 async def check_credentials(request: LoginRequest, db: Session = Depends(get_db)):
@@ -365,44 +362,17 @@ async def reset_password(request: ResetPasswordRequest, db: Session = Depends(ge
     _clear_otp_attempts(safe_email, db)
     return {"message": "Password updated successfully!"}
 
-# ── PET & VACCINE ROUTES ──────────────────────────────────────────────────────
+@app.get("/")
+async def welcome():
+    return {"message": "Welcome to the PetCare API!"}
 
-@app.get("/api/pets/{email}")
-async def get_user_pets(email: str, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
-    if email.lower().strip() != current_email:
-        raise HTTPException(status_code=403, detail="Access denied.")
-    return db.query(Pet).filter(Pet.owner_email == current_email).all()
-
-@app.post("/api/pets")
-async def add_pet(request: PetRequest, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
-    db.add(Pet(owner_email=current_email, pet_type=request.pet_type, breed=request.breed, name=request.name, age=request.age))
-    db.commit()
-    return {"message": "Pet added successfully!"}
-
-@app.delete("/api/pets/{pet_id}")
-async def delete_pet(pet_id: int, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
-    pet = db.query(Pet).filter(Pet.id == pet_id, Pet.owner_email == current_email).first()
-    if not pet:
-        raise HTTPException(status_code=404, detail="Pet not found.")
-    db.delete(pet)
-    db.commit()
-    return {"message": "Pet deleted successfully!"}
-
-@app.put("/api/pets/{pet_id}")
-async def update_pet(pet_id: int, request: PetUpdate, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
-    pet = db.query(Pet).filter(Pet.id == pet_id, Pet.owner_email == current_email).first()
-    if not pet:
-        raise HTTPException(status_code=404, detail="Pet not found.")
-    pet.pet_type, pet.breed, pet.name, pet.age = request.pet_type, request.breed, request.name, request.age
-    db.commit()
-    return {"message": "Pet updated successfully!"}
+# ── DIET ROUTE (protected) ────────────────────────────────────────────────────
 
 @app.get("/api/diet/{email}")
 async def get_diet_plan(email: str, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
     if email.lower().strip() != current_email:
         raise HTTPException(status_code=403, detail="Access denied.")
     
-    # Fetch pets using the securely verified current_email
     pets = db.query(Pet).filter(Pet.owner_email == current_email).all()
     if not pets:
         return {"diets": []}
@@ -440,6 +410,38 @@ async def get_diet_plan(email: str, db: Session = Depends(get_db), current_email
             "avoid":    avoid,
         })
     return {"diets": diet_plans}
+# ── PET & VACCINE ROUTES ──────────────────────────────────────────────────────
+
+@app.get("/api/pets/{email}")
+async def get_user_pets(email: str, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
+    if email.lower().strip() != current_email:
+        raise HTTPException(status_code=403, detail="Access denied.")
+    return db.query(Pet).filter(Pet.owner_email == current_email).all()
+
+@app.post("/api/pets")
+async def add_pet(request: PetRequest, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
+    db.add(Pet(owner_email=current_email, pet_type=request.pet_type, breed=request.breed, name=request.name, age=request.age))
+    db.commit()
+    return {"message": "Pet added successfully!"}
+
+@app.delete("/api/pets/{pet_id}")
+async def delete_pet(pet_id: int, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
+    pet = db.query(Pet).filter(Pet.id == pet_id, Pet.owner_email == current_email).first()
+    if not pet:
+        raise HTTPException(status_code=404, detail="Pet not found.")
+    db.delete(pet)
+    db.commit()
+    return {"message": "Pet deleted successfully!"}
+
+@app.put("/api/pets/{pet_id}")
+async def update_pet(pet_id: int, request: PetUpdate, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
+    pet = db.query(Pet).filter(Pet.id == pet_id, Pet.owner_email == current_email).first()
+    if not pet:
+        raise HTTPException(status_code=404, detail="Pet not found.")
+    pet.pet_type, pet.breed, pet.name, pet.age = request.pet_type, request.breed, request.name, request.age
+    db.commit()
+    return {"message": "Pet updated successfully!"}
+
 
 @app.post("/api/vaccines")
 async def create_vaccine(vax: VaccineCreate, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
