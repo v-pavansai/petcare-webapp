@@ -7,12 +7,10 @@ const API_URL = "";
 
 /** Escape user-controlled strings before injecting into innerHTML. */
 function escapeHTML(str) {
-    return String(str ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+    if (!str) return '';
+    const p = document.createElement('p');
+    p.textContent = str;
+    return p.innerHTML;
 }
 
 /** Return headers that include the JWT bearer token for all authenticated calls. */
@@ -227,8 +225,10 @@ async function loadUserPets() {
             else if (pet.pet_type === 'Rabbit') { icon = 'ti-carrot'; bgColor = '#fce7f3'; iconColor = '#be185d'; } 
             else if (pet.pet_type === 'Turtle') { icon = 'ti-ripple'; bgColor = '#ecfccb'; iconColor = '#4d7c0f'; }
 
+            // Use safe single quotes and ensure the ID is just a number
+            const safePetName = escapeHTML(pet.name).replace(/'/g, "\\'").replace(/"/g, "&quot;");
             const petHTML = `
-              <div class="pet-item" onclick="openPetModal(${parseInt(pet.id)}, ${JSON.stringify(escapeHTML(pet.name))})">
+              <div class="pet-item" onclick="openPetModal(${parseInt(pet.id)}, '${safePetName}')">
                 <div class="pet-info">
                   <div class="pet-icon" style="background: ${bgColor}; color: ${iconColor};"><i class="ti ${icon}"></i></div>
                   <div>
@@ -558,11 +558,14 @@ function initVaxTab() {
         return;
     }
 
-    window.currentPets.forEach(pet => {
+window.currentPets.forEach(pet => {
         const petVaxes = appVaccines.filter(v => v.petId == pet.id);
         
+        // CRITICAL FIX: Safely escape the name for the HTML attribute
+        const safeVaxName = escapeHTML(pet.name).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        
         listContainer.innerHTML += `
-            <div class="card" style="padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="openVaxDetails(${parseInt(pet.id)}, ${JSON.stringify(escapeHTML(pet.name))})">
+            <div class="card" style="padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="openVaxDetails(${parseInt(pet.id)}, '${safeVaxName}')">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div style="width: 40px; height: 40px; background: var(--blue-light); color: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
                         <i class="ti ti-vaccine"></i>
