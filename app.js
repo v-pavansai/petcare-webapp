@@ -1175,6 +1175,33 @@ function generatePresentationClinics(centerLat, centerLng) {
 // ==========================================
 // 7. PROFILE & DATABASE UPDATES
 // ==========================================
+function deleteAccount() {
+    showAppConfirm("Delete your account permanently?", async () => {
+        const userEmail = localStorage.getItem('pawcare_user_email');
+        
+        try {
+            const response = await fetch(`${API_URL}/api/users/${userEmail}`, {
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            });
+            
+            if (handleAuthError(response)) return;
+            
+            if (response.ok) {
+                // Instantly wipe local storage and kick them to login
+                localStorage.removeItem('pawcare_user_name');
+                localStorage.removeItem('pawcare_user_email');
+                localStorage.removeItem('pawcare_auth_token');
+                window.location.href = "login.html";
+            } else {
+                showAppAlert("Failed to delete account.", "error");
+            }
+        } catch (error) {
+            showAppAlert("Cannot connect to server.", "error");
+        }
+    });
+}
+
 function editUsername() {
   const currentName = localStorage.getItem('pawcare_user_name');
   document.getElementById('new-username-input').value = currentName || '';
