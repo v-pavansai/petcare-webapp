@@ -7,3 +7,5 @@ python-multipart
 google-genai
 Pillow
 pydantic[email]
+passlib[bcrypt]
+python-jose[cryptography]
