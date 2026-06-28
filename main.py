@@ -29,7 +29,7 @@ app = FastAPI(title="PetCare API")
 DATABASE_URL    = os.getenv("DATABASE_URL")
 GEMINI_API_KEY  = os.getenv("GEMINI_API_KEY")
 # SECRET_KEY must be set in .env for production; the fallback is random per-restart
-SECRET_KEY      = os.getenv("SECRET_KEY", secrets.token_hex(32))
+SECRET_KEY      = os.getenv("SECRET_KEY")
 ALGORITHM       = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 7
 
@@ -39,7 +39,7 @@ SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
 
-ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")]
+ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS").split(",")]
 
 app.add_middleware(
     CORSMiddleware,
