@@ -3,6 +3,44 @@
 // ==========================================
 const API_URL = "";
 
+// ── SECURITY HELPERS ──────────────────────────────────────────────────────────
+
+/** Escape user-controlled strings before injecting into innerHTML. */
+function escapeHTML(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+/** Return headers that include the JWT bearer token for all authenticated calls. */
+function getAuthHeaders(extraHeaders = {}) {
+    const token = localStorage.getItem('pawcare_auth_token');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...extraHeaders
+    };
+}
+
+/**
+ * If the server responds 401 (token expired / invalid), clear local state
+ * and redirect to login.  Returns true if the caller should abort.
+ */
+function handleAuthError(response) {
+    if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('pawcare_auth_token');
+        localStorage.removeItem('pawcare_user_email');
+        localStorage.removeItem('pawcare_user_name');
+        window.location.href = 'login.html';
+        return true;
+    }
+    return false;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function showAppAlert(message, type = 'error') {
     const modal = document.getElementById('app-alert-modal');
     const msgEl = document.getElementById('app-alert-message');
@@ -97,6 +135,7 @@ function toggleTheme() {
 function logout() {
     localStorage.removeItem('pawcare_user_name');
     localStorage.removeItem('pawcare_user_email');
+    localStorage.removeItem('pawcare_auth_token');
     window.location.href = "login.html";
 }
 
@@ -168,7 +207,8 @@ async function loadUserPets() {
     if(detectDropdown) detectDropdown.innerHTML = '<option value="">Select a pet first...</option>';
 
     try {
-        const response = await fetch(`${API_URL}/api/pets/${userEmail}`);
+        const response = await fetch(`${API_URL}/api/pets/${userEmail}`, { headers: getAuthHeaders() });
+        if (handleAuthError(response)) return;
         const pets = await response.json();
         window.currentPets = pets;
 
@@ -188,21 +228,21 @@ async function loadUserPets() {
             else if (pet.pet_type === 'Turtle') { icon = 'ti-ripple'; bgColor = '#ecfccb'; iconColor = '#4d7c0f'; }
 
             const petHTML = `
-              <div class="pet-item" onclick="openPetModal(${pet.id}, \`${pet.name}\`)">
+              <div class="pet-item" onclick="openPetModal(${parseInt(pet.id)}, ${JSON.stringify(escapeHTML(pet.name))})">
                 <div class="pet-info">
                   <div class="pet-icon" style="background: ${bgColor}; color: ${iconColor};"><i class="ti ${icon}"></i></div>
                   <div>
-                    <div class="pet-name">${pet.name} <span style="font-size: 12px; font-weight: normal; color: var(--text-3);">(${pet.age})</span></div>
-                    <div class="pet-type">${pet.breed}</div>
+                    <div class="pet-name">${escapeHTML(pet.name)} <span style="font-size: 12px; font-weight: normal; color: var(--text-3);">(${escapeHTML(pet.age)})</span></div>
+                    <div class="pet-type">${escapeHTML(pet.breed)}</div>
                   </div>
                 </div>
                 <i class="ti ti-chevron-right" style="color: var(--text-3);"></i>
               </div>
             `;
             petContainer.innerHTML += petHTML;
-            dietDropdown.innerHTML += `<option value="${pet.id}">${pet.name} (${pet.pet_type})</option>`;
+            dietDropdown.innerHTML += `<option value="${parseInt(pet.id)}">${escapeHTML(pet.name)} (${escapeHTML(pet.pet_type)})</option>`;
             
-            if(detectDropdown) detectDropdown.innerHTML += `<option value="${pet.id}">${pet.name} - ${pet.age} old ${pet.breed}</option>`;
+            if(detectDropdown) detectDropdown.innerHTML += `<option value="${parseInt(pet.id)}">${escapeHTML(pet.name)} - ${escapeHTML(pet.age)} old ${escapeHTML(pet.breed)}</option>`;
         });
 
         initVaxTab();
@@ -224,9 +264,10 @@ async function savePet() {
 
     try {
         const response = await fetch(`${API_URL}/api/pets`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: getAuthHeaders(),
             body: JSON.stringify({ owner_email: email, pet_type: type, breed: breed, name: name, age: age })
         });
+        if (handleAuthError(response)) return;
         if (response.ok) {
             document.getElementById('add-pet-form').style.display = 'none';
             document.getElementById('pet-name').value = ''; document.getElementById('pet-age').value = ''; document.getElementById('pet-type').value = '';
@@ -254,7 +295,8 @@ function confirmDelete() {
     if (!currentSelectedPetId) return;
     showAppConfirm(`Are you sure you want to permanently delete this pet?`, async () => {
         try {
-            const response = await fetch(`${API_URL}/api/pets/${currentSelectedPetId}`, { method: 'DELETE' });
+            const response = await fetch(`${API_URL}/api/pets/${currentSelectedPetId}`, { method: 'DELETE', headers: getAuthHeaders() });
+            if (handleAuthError(response)) return;
             if (response.ok) { 
                 closePetModal(); 
                 loadUserPets(); 
@@ -290,9 +332,10 @@ async function submitUpdate() {
 
     try {
         const response = await fetch(`${API_URL}/api/pets/${currentSelectedPetId}`, {
-            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            method: 'PUT', headers: getAuthHeaders(),
             body: JSON.stringify({ pet_type: type, breed: breed, name: name, age: age })
         });
+        if (handleAuthError(response)) return;
         if (response.ok) {
             document.getElementById('update-pet-modal').style.display = 'none';
             loadUserPets(); 
@@ -411,7 +454,8 @@ const vaxGuidelines = {
 async function loadVaccines() {
     const email = localStorage.getItem('pawcare_user_email');
     try {
-        const response = await fetch(`${API_URL}/api/vaccines/${email}`);
+        const response = await fetch(`${API_URL}/api/vaccines/${email}`, { headers: getAuthHeaders() });
+        if (handleAuthError(response)) return;
         if (response.ok) {
             const data = await response.json();
             appVaccines = data.map(v => ({
@@ -440,9 +484,10 @@ async function saveNewVaccine() {
     try {
         const response = await fetch(`${API_URL}/api/vaccines`, {
             method: 'POST', 
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ pet_id: currentVaxPetId, name: name, date: date, owner_email: email })
         });
+        if (handleAuthError(response)) return;
         
         if (response.ok) {
             closeAddVaxForm();
@@ -464,9 +509,10 @@ async function markVaxComplete(vaxId) {
     try {
         const response = await fetch(`${API_URL}/api/vaccines/${vaxId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ date: newDate }) 
         });
+        if (handleAuthError(response)) return;
 
         if (response.ok) {
             loadVaccines(); 
@@ -478,7 +524,8 @@ async function markVaxComplete(vaxId) {
 function deleteVax(vaxId) {
     showAppConfirm("Delete this record permanently?", async () => {
         try {
-            const response = await fetch(`${API_URL}/api/vaccines/${vaxId}`, { method: 'DELETE' });
+            const response = await fetch(`${API_URL}/api/vaccines/${vaxId}`, { method: 'DELETE', headers: getAuthHeaders() });
+            if (handleAuthError(response)) return;
             if (response.ok) {
                 loadVaccines(); 
                 showAppAlert("Vaccine record deleted.", "success");
@@ -515,13 +562,13 @@ function initVaxTab() {
         const petVaxes = appVaccines.filter(v => v.petId == pet.id);
         
         listContainer.innerHTML += `
-            <div class="card" style="padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="openVaxDetails(${pet.id}, '${pet.name}')">
+            <div class="card" style="padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="openVaxDetails(${parseInt(pet.id)}, ${JSON.stringify(escapeHTML(pet.name))})">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div style="width: 40px; height: 40px; background: var(--blue-light); color: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
                         <i class="ti ti-vaccine"></i>
                     </div>
                     <div>
-                        <div style="font-weight: 600; color: var(--text); font-size: 16px;">${pet.name}</div>
+                        <div style="font-weight: 600; color: var(--text); font-size: 16px;">${escapeHTML(pet.name)}</div>
                         <div style="font-size: 12px; color: var(--text-2);">${petVaxes.length} Records</div>
                     </div>
                 </div>
@@ -577,24 +624,24 @@ function renderPetVaxSchedule() {
             if (status.category === 'upcoming') countUpcoming++;
 
             listContainer.innerHTML += `
-                <div class="card" style="padding: 15px; cursor: pointer; transition: 0.2s;" onclick="toggleVaxActions(${vax.id})">
+                <div class="card" style="padding: 15px; cursor: pointer; transition: 0.2s;" onclick="toggleVaxActions(${parseInt(vax.id)})">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
-                            <div style="font-weight: 600; color: var(--text); font-size: 15px;">${vax.name}</div>
-                            <div style="font-size: 12px; color: var(--text-2);">${vax.date}</div>
+                            <div style="font-weight: 600; color: var(--text); font-size: 15px;">${escapeHTML(vax.name)}</div>
+                            <div style="font-size: 12px; color: var(--text-2);">${escapeHTML(vax.date)}</div>
                         </div>
                         <div style="font-size: 13px; font-weight: bold; color: ${status.color}; display: flex; align-items: center; gap: 4px;">
-                            ${status.text} <i class="ti ti-chevron-down" id="vax-icon-${vax.id}" style="transition: 0.3s; color: var(--text-3);"></i>
+                            ${status.text} <i class="ti ti-chevron-down" id="vax-icon-${parseInt(vax.id)}" style="transition: 0.3s; color: var(--text-3);"></i>
                         </div>
                     </div>
                     
-                    <div id="vax-actions-${vax.id}" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); gap: 10px;">
+                    <div id="vax-actions-${parseInt(vax.id)}" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); gap: 10px;">
                         ${status.category !== 'completed' ? `
-                            <button class="btn" style="flex: 1; padding: 8px; font-size: 13px; color: var(--blue); background: transparent; border: none;" onclick="event.stopPropagation(); markVaxComplete(${vax.id})">
+                            <button class="btn" style="flex: 1; padding: 8px; font-size: 13px; color: var(--blue); background: transparent; border: none;" onclick="event.stopPropagation(); markVaxComplete(${parseInt(vax.id)})">
                                 <i class="ti ti-check"></i> Mark Done
                             </button>
                         ` : ''}
-                        <button class="btn" style="flex: 1; padding: 8px; font-size: 13px; color: #ef4444; background: transparent; border: none;" onclick="event.stopPropagation(); deleteVax(${vax.id})">
+                        <button class="btn" style="flex: 1; padding: 8px; font-size: 13px; color: #ef4444; background: transparent; border: none;" onclick="event.stopPropagation(); deleteVax(${parseInt(vax.id)})">
                             <i class="ti ti-trash"></i> Delete
                         </button>
                     </div>
@@ -659,8 +706,8 @@ function updateGlobalAlerts() {
                             <i class="ti ti-bell-ringing"></i>
                         </div>
                         <div>
-                            <div style="font-size: 14px; color: var(--text); line-height: 1.4;">You have an upcoming vaccine <strong>${vax.name}</strong> for <strong>${petName}</strong>.</div>
-                            <div style="font-size: 11px; color: var(--text-2); margin-top: 4px;">Due by ${vax.date}</div>
+                            <div style="font-size: 14px; color: var(--text); line-height: 1.4;">You have an upcoming vaccine <strong>${escapeHTML(vax.name)}</strong> for <strong>${escapeHTML(petName)}</strong>.</div>
+                            <div style="font-size: 11px; color: var(--text-2); margin-top: 4px;">Due by ${escapeHTML(vax.date)}</div>
                         </div>
                     </div>
                 </div>
@@ -848,14 +895,16 @@ async function executeBackendDiagnostic() {
     try {
         const response = await fetch(`${API_URL}/api/analyze-health`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify(activeAnalysisData) 
         });
+        if (handleAuthError(response)) return;
 
         if (!response.ok) throw new Error("API Diagnostic analysis failed");
         
         const data = await response.json();
-        let cleanText = data.analysis;
+        // Escape raw AI text FIRST to prevent any HTML injection, then apply safe formatting
+        let cleanText = escapeHTML(data.analysis);
 
         let cardBg = "#ffffff";
         let cardBorder = "#e2e8f0";
@@ -1149,9 +1198,10 @@ async function saveNewUsername() {
       try {
           const response = await fetch(`${API_URL}/api/users/${userEmail}/username`, {
               method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
+              headers: getAuthHeaders(),
               body: JSON.stringify({ new_username: newName })
           });
+          if (handleAuthError(response)) return;
 
           if (response.ok) {
               localStorage.setItem('pawcare_user_name', newName);
