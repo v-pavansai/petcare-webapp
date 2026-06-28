@@ -519,6 +519,25 @@ async def analyze_health(request: AnalyzeRequest, current_email: str = Depends(g
         raise HTTPException(status_code=500, detail="Failed to generate AI response.")
 
 # ── USER ROUTES (protected) ───────────────────────────────────────────────────
+@app.delete("/api/users/{email}")
+async def delete_user_account(email: str, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
+    if email.lower().strip() != current_email:
+        raise HTTPException(status_code=403, detail="Access denied.")
+    
+    user = db.query(User).filter(User.email == current_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+        
+    # Clean up all data associated with the user
+    db.query(Pet).filter(Pet.owner_email == current_email).delete()
+    db.query(Vaccine).filter(Vaccine.owner_email == current_email).delete()
+    db.query(OTPCode).filter(OTPCode.email == current_email).delete()
+    db.query(AuthRateLimit).filter(AuthRateLimit.email == current_email).delete()
+    
+    db.delete(user)
+    db.commit()
+    return {"message": "Account deleted successfully."}
+
 
 @app.put("/api/users/{email}/username")
 async def update_username(email: str, request: UsernameUpdate, db: Session = Depends(get_db), current_email: str = Depends(get_current_email)):
