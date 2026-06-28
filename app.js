@@ -1,7 +1,7 @@
 // ==========================================
 // 0. GLOBAL APP CONFIG & ALERTS
 // ==========================================
-const API_URL = "http://127.0.0.1:8000"; // Change this if using Pinggy on mobile!
+const API_URL = "";
 
 function showAppAlert(message, type = 'error') {
     const modal = document.getElementById('app-alert-modal');
