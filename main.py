@@ -39,7 +39,7 @@ SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
 
-ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS").split(",")]
+ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS")]
 
 app.add_middleware(
     CORSMiddleware,
