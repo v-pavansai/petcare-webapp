@@ -586,7 +586,8 @@
                 window.verifiedResetOtp = otpCode; 
             } else {
                 localStorage.setItem('pawcare_user_name', data.username || activeUsernameToSave);
-                localStorage.setItem('pawcare_user_email', email);
+                localStorage.setItem('pawcare_user_email', email.toLowerCase().trim());
+                localStorage.setItem('pawcare_auth_token', data.token);   
                 window.location.href = "index.html";
             }
         } else {
