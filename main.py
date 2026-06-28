@@ -38,8 +38,7 @@ SMTP_PORT     = int(os.getenv("SMTP_PORT", 587))
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 
-# Set ALLOWED_ORIGINS in .env (comma-separated) to your real frontend URL(s).
-# Example: ALLOWED_ORIGINS=https://petcare-xyz.vercel.app
+
 ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")]
 
 app.add_middleware(
