@@ -266,6 +266,13 @@
     </div>
 
     <div id="profile" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px;">
+        <div class="sec-label" style="margin: 0; font-size: 20px;">My Profile</div>
+        <button class="icon-btn" style="color: #dc2626; background: rgba(220, 38, 38, 0.1); width: 35px; height: 35px;" onclick="deleteAccount()">
+            <i class="ti ti-trash"></i>
+        </button>
+    </div>
+
       <div style="display: flex; align-items: center; gap: 20px; padding: 20px 0;">
         <div id="profile-initial" style="width: 70px; height: 70px; border-radius: 50%; background: var(--blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold;">?</div>
         <div>
@@ -276,6 +283,20 @@
           <div id="profile-email" style="color: var(--text-2); font-size: 14px;">Not logged in</div>
         </div>
       </div>
+
+      <div class="sec-label" style="margin-top: 10px;">Settings</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="pet-item" style="border-radius: var(--radius-sm); cursor: pointer;">
+          <span style="font-weight: 500;">Help</span> 
+          <i class="ti ti-help" style="color: var(--text-3); font-size: 20px;"></i>
+        </div>
+        <div class="pet-item" onclick="logout()" style="border-radius: var(--radius-sm); border-color: rgba(220, 38, 38, 0.3); cursor: pointer;">
+          <span style="font-weight: 500; color: #dc2626;">Logout</span> 
+          <i class="ti ti-logout" style="color: #dc2626; font-size: 20px;"></i>
+        </div>
+      </div>
+    </div>
 
       <div class="sec-label" style="margin-top: 10px;">Settings</div>
       
@@ -369,10 +390,10 @@
           <div style="font-size: 48px; color: var(--amber-dark); margin-bottom: 15px;">
               <i class="ti ti-alert-triangle"></i>
           </div>
-          <div id="app-confirm-message" style="color: var(--text); font-size: 15px; margin-bottom: 25px; line-height: 1.5; font-weight: 500;">Are you sure?</div>
+          <div id="app-confirm-message" style="color: var(--text); font-size: 15px; margin-bottom: 25px; line-height: 1.5; font-weight: 500;">Delete your account permanently?</div>
           <div style="display: flex; gap: 10px;">
-              <button class="btn btn-outline" style="flex: 1; font-weight: bold;" onclick="closeAppConfirm()">Cancel</button>
-              <button class="btn btn-primary" id="app-confirm-yes-btn" style="flex: 1; background: #e93434; border: none; font-weight: bold;" onclick="executeAppConfirm()">Yes, Delete</button>
+              <button class="btn btn-outline" style="flex: 1; font-weight: bold;" onclick="closeAppConfirm()">No</button>
+              <button class="btn btn-primary" id="app-confirm-yes-btn" style="flex: 1; background: #e93434; border: none; font-weight: bold;" onclick="executeAppConfirm()">Yes</button>
           </div>
       </div>
   </div>
