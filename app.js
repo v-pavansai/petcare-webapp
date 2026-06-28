@@ -48,18 +48,23 @@ function showAppAlert(message, type = 'error') {
     
     msgEl.innerText = message;
     
+    // Hide the icon completely for a minimal look
+    iconEl.style.display = 'none'; 
+    
+    // Make the card border thin and subtle instead of thick and colored
+    card.style.border = '1px solid var(--border)'; 
+    btn.style.border = 'none';
+    
+    // Apply muted, less vibrant colors just to the button
     if (type === 'error') {
-        iconEl.innerHTML = '<i class="ti ti-xbox-x" style="color: #dc2626;"></i>';
-        card.style.borderColor = '#dc2626';
-        btn.style.background = '#dc2626';
+        btn.style.background = '#d66d6d'; // Muted soft red
+        btn.style.color = '#ffffff';
     } else if (type === 'success') {
-        iconEl.innerHTML = '<i class="ti ti-circle-check" style="color: #16a34a;"></i>';
-        card.style.borderColor = '#16a34a';
-        btn.style.background = '#16a34a';
+        btn.style.background = '#659c7a'; // Muted soft green
+        btn.style.color = '#ffffff';
     } else {
-        iconEl.innerHTML = '<i class="ti ti-info-circle" style="color: var(--blue);"></i>';
-        card.style.borderColor = 'var(--blue)';
-        btn.style.background = 'var(--blue)';
+        btn.style.background = '#6b829e'; // Muted soft blue
+        btn.style.color = '#ffffff';
     }
     
     modal.style.display = 'flex';
