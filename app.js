@@ -159,6 +159,17 @@ function navTo(screenId, navElement = null) {
 // ==========================================
 // 2. PET MANAGEMENT
 // ==========================================
+/** Validate age strings like "2 months" or "2.7 years" and reject nonsense (e.g. "6000"). */
+function isValidPetAge(age) {
+    if (!age) return false;
+    const match = age.trim().match(/^(\d+(\.\d+)?)\s*(month|months|year|years)$/i);
+    if (!match) return false;
+    const value = parseFloat(match[1]);
+    const unit = match[3].toLowerCase();
+    if (unit.startsWith('month')) return value > 0 && value <= 300;
+    return value > 0 && value <= 100;
+}
+
 const petBreeds = {
     "Dog": ["Indie (Local)", "Labrador Retriever", "Golden Retriever", "German Shepherd", "Pomeranian", "Pug", "Shih Tzu", "Beagle", "Rottweiler", "Doberman", "Other"],
     "Cat": ["Indie (Local/Mixed)", "Persian", "Siamese", "Himalayan", "Maine Coon", "Bengal", "Other"],
@@ -172,6 +183,7 @@ const petBreeds = {
 function updateBreeds() {
     const typeSelect = document.getElementById('pet-type');
     const breedSelect = document.getElementById('pet-breed');
+    const otherInput = document.getElementById('pet-breed-other');
     const selectedType = typeSelect.value;
     breedSelect.innerHTML = '<option value="">Select Breed...</option>';
     if (selectedType && petBreeds[selectedType]) {
@@ -182,11 +194,22 @@ function updateBreeds() {
             breedSelect.appendChild(option);
         });
     } else { breedSelect.disabled = true; }
+
+    if (selectedType === 'Other') {
+        breedSelect.style.display = 'none';
+        breedSelect.disabled = true;
+        otherInput.style.display = 'block';
+    } else {
+        breedSelect.style.display = '';
+        otherInput.style.display = 'none';
+        otherInput.value = '';
+    }
 }
 
 function updateBreedsForEdit() {
     const typeSelect = document.getElementById('update-pet-type');
     const breedSelect = document.getElementById('update-pet-breed');
+    const otherInput = document.getElementById('update-pet-breed-other');
     const selectedType = typeSelect.value;
     breedSelect.innerHTML = '<option value="">Select Breed...</option>';
     if (selectedType && petBreeds[selectedType]) {
@@ -197,6 +220,16 @@ function updateBreedsForEdit() {
             breedSelect.appendChild(option);
         });
     } else { breedSelect.disabled = true; }
+
+    if (selectedType === 'Other') {
+        breedSelect.style.display = 'none';
+        breedSelect.disabled = true;
+        otherInput.style.display = 'block';
+    } else {
+        breedSelect.style.display = '';
+        otherInput.style.display = 'none';
+        otherInput.value = '';
+    }
 }
 
 async function loadUserPets() {
@@ -261,11 +294,22 @@ async function loadUserPets() {
 async function savePet() {
     const email = localStorage.getItem('pawcare_user_email');
     const type = document.getElementById('pet-type').value;
-    const breed = document.getElementById('pet-breed').value;
+    let breed = document.getElementById('pet-breed').value;
     const name = document.getElementById('pet-name').value;
     const age = document.getElementById('pet-age').value;
 
+    if (type === 'Other') {
+        const customBreed = document.getElementById('pet-breed-other').value.trim();
+        if (!customBreed) { showAppAlert("Please specify your pet's type/breed!", "error"); return; }
+        breed = customBreed;
+    }
+
     if (!type || !breed || !name || !age) { showAppAlert("Please fill out all fields!", "error"); return; }
+
+    if (!isValidPetAge(age)) {
+        showAppAlert("Please enter a realistic age, e.g. '2 months' or '2.7 years'.", "error");
+        return;
+    }
 
     try {
         const response = await fetch(`${API_URL}/api/pets`, {
@@ -276,6 +320,7 @@ async function savePet() {
         if (response.ok) {
             document.getElementById('add-pet-form').style.display = 'none';
             document.getElementById('pet-name').value = ''; document.getElementById('pet-age').value = ''; document.getElementById('pet-type').value = '';
+            document.getElementById('pet-breed-other').value = ''; document.getElementById('pet-breed-other').style.display = 'none';
             updateBreeds(); 
             loadUserPets(); 
             showAppAlert("Pet added successfully!", "success");
@@ -323,17 +368,32 @@ function prepareUpdate() {
     document.getElementById('update-pet-type').value = pet.pet_type;
     
     updateBreedsForEdit();
-    document.getElementById('update-pet-breed').value = pet.breed;
+    if (pet.pet_type === 'Other') {
+        document.getElementById('update-pet-breed-other').value = pet.breed;
+    } else {
+        document.getElementById('update-pet-breed').value = pet.breed;
+    }
     document.getElementById('update-pet-modal').style.display = 'flex';
 }
 
 async function submitUpdate() {
     const type = document.getElementById('update-pet-type').value;
-    const breed = document.getElementById('update-pet-breed').value;
+    let breed = document.getElementById('update-pet-breed').value;
     const name = document.getElementById('update-pet-name').value;
     const age = document.getElementById('update-pet-age').value;
 
+    if (type === 'Other') {
+        const customBreed = document.getElementById('update-pet-breed-other').value.trim();
+        if (!customBreed) { showAppAlert("Please specify your pet's type/breed!", "error"); return; }
+        breed = customBreed;
+    }
+
     if (!type || !breed || !name || !age) { showAppAlert("Please fill out all fields!", "error"); return; }
+
+    if (!isValidPetAge(age)) {
+        showAppAlert("Please enter a realistic age, e.g. '2 months' or '2.7 years'.", "error");
+        return;
+    }
 
     try {
         const response = await fetch(`${API_URL}/api/pets/${currentSelectedPetId}`, {
@@ -353,31 +413,34 @@ async function submitUpdate() {
 // 3. DIET LOGIC
 // ==========================================
 function handlePetSelection() {
-    const petId = document.getElementById('diet-pet-select').value;
+    // Health and allergy dropdowns are now available for all pet types, not just Dogs/Cats.
     const allergySelect = document.getElementById('diet-allergies');
-    const healthSelect = document.getElementById('diet-health'); 
-
-    if (!petId) {
-        allergySelect.disabled = false; healthSelect.disabled = false; return;
-    }
-    const pet = window.currentPets.find(p => p.id == petId);
-    if (pet.pet_type === "Fish" || pet.pet_type === "Bird" || pet.pet_type === "Turtle" || pet.pet_type === "Rabbit") {
-        allergySelect.value = "None"; allergySelect.disabled = true; 
-        healthSelect.value = "Normal"; healthSelect.disabled = true; 
-    } else {
-        allergySelect.disabled = false; healthSelect.disabled = false; 
-    }
+    const healthSelect = document.getElementById('diet-health');
+    allergySelect.disabled = false;
+    healthSelect.disabled = false;
 }
+
+// Reasonable weight ranges (kg) used to sanity-check the entered weight per species.
+const petWeightRanges = {
+    "Dog": [0.3, 90], "Cat": [0.3, 12], "Bird": [0.01, 2], "Fish": [0.001, 20],
+    "Rabbit": [0.3, 10], "Turtle": [0.01, 90], "Other": [0.01, 200]
+};
 
 function generateCustomDiet() {
     const petId = document.getElementById('diet-pet-select').value;
-    const weight = document.getElementById('diet-weight').value;
+    const weight = parseFloat(document.getElementById('diet-weight').value);
     const health = document.getElementById('diet-health').value;
     const allergy = document.getElementById('diet-allergies').value;
 
-    if (!petId || !weight) { showAppAlert("Please select a pet and enter their weight!", "error"); return; }
+    if (!petId || !document.getElementById('diet-weight').value) { showAppAlert("Please select a pet and enter their weight!", "error"); return; }
 
     const pet = window.currentPets.find(p => p.id == petId);
+
+    const range = petWeightRanges[pet.pet_type] || petWeightRanges["Other"];
+    if (isNaN(weight) || weight <= 0 || weight < range[0] || weight > range[1]) {
+        showAppAlert(`Please enter a realistic weight for a ${pet.pet_type} (between ${range[0]}kg and ${range[1]}kg). If your pet weighs less than 1kg, enter it as a decimal, e.g. 0.7.`, "error");
+        return;
+    }
     
     let mainProtein = "Standard Pet Food"; let secondaryItem = "Fresh Water"; let warningText = "Ensure fresh water is always available.";
 
