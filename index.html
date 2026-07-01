@@ -66,6 +66,8 @@
               <option value="">Select Breed first...</option>
           </select>
 
+          <input type="text" id="pet-breed-other" placeholder="Please specify your pet's type/breed" style="display: none;" />
+
           <input type="text" id="pet-name" placeholder="Pet's Name (e.g. Charlie)" />
           <input type="text" id="pet-age" placeholder="Age (e.g. 2 months or 2.7 years)" />
 
@@ -95,7 +97,7 @@
           <option value="">Select Pet</option>
         </select>
 
-        <input type="number" id="diet-weight" placeholder="Weight (kg)" />
+        <input type="number" id="diet-weight" placeholder="Weight in kg (e.g. 0.7)" step="0.1" min="0.01" max="120" />
 
         <div style="display: flex; gap: 10px;">
           <select id="diet-health" style="flex: 1;">
@@ -336,6 +338,8 @@
           <select id="update-pet-breed" style="margin-bottom: 15px;">
               <option value="">Select Breed...</option>
           </select>
+
+          <input type="text" id="update-pet-breed-other" placeholder="Please specify your pet's type/breed" style="display: none; margin-bottom: 15px;" />
 
           <input type="text" id="update-pet-name" placeholder="Pet's Name" style="margin-bottom: 15px;" />
           <input type="text" id="update-pet-age" placeholder="Age (e.g. 2 months)" />
