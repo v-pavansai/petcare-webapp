@@ -79,8 +79,39 @@
   .sec-label { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 12px; font-family: var(--font-display); }
   
   /* --- UI COMPONENTS --- */
-  input, select, textarea { width: 100%; padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--surface); color: var(--text); font-family: var(--font); outline: none;}
+  input, select, textarea { 
+      width: 100%; 
+      padding: 14px; 
+      margin-bottom: 15px; 
+      border-radius: var(--radius-sm); 
+      border: 1px solid var(--border); 
+      font-size: 14px; 
+      background: var(--surface); 
+      color: var(--text); 
+      font-family: var(--font); 
+      outline: none; 
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
   input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+  
+  /* Specific styling for dropdowns to add custom arrows */
+  select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%236b6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+      cursor: pointer;
+  }
+  
+  select:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* Adapt dropdown arrow color for Dark Mode */
+  [data-theme="dark"] select {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
+  }
   
   .btn { width: 100%; padding: 14px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); transition: 0.2s;}
   .btn:active { transform: scale(0.98); }
