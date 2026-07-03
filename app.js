@@ -159,76 +159,85 @@ function navTo(screenId, navElement = null) {
 // ==========================================
 // 2. PET MANAGEMENT
 // ==========================================
-/** Validate age strings like "2 months" or "2.7 years" and reject nonsense (e.g. "6000"). */
-function isValidPetAge(age) {
-    if (!age) return false;
-    const match = age.trim().match(/^(\d+(\.\d+)?)\s*(month|months|year|years)$/i);
-    if (!match) return false;
-    const value = parseFloat(match[1]);
-    const unit = match[3].toLowerCase();
-    if (unit.startsWith('month')) return value > 0 && value <= 300;
-    return value > 0 && value <= 100;
-}
 
-const petBreeds = {
-    "Dog": ["Indie (Local)", "Labrador Retriever", "Golden Retriever", "German Shepherd", "Pomeranian", "Pug", "Shih Tzu", "Beagle", "Rottweiler", "Doberman", "Other"],
-    "Cat": ["Indie (Local/Mixed)", "Persian", "Siamese", "Himalayan", "Maine Coon", "Bengal", "Other"],
-    "Bird": ["Budgie", "Love Bird", "Indian Ringneck", "Cockatiel", "Mynah", "Green Indian Parrot (Tota/Mithoo)", "Finch", "Other"],
-    "Fish": ["Goldfish", "Betta (Fighter Fish)", "Guppy", "Tetra", "Koi / Carp", "Molly", "Angel Fish", "Other"],
-    "Rabbit": ["Local/Mixed", "New Zealand White", "Angora", "Other"],
-    "Turtle": ["Red-Eared Slider", "Indian Tent Turtle", "Other"],
-    "Other": ["Unknown/Mixed"]
+// Extracted from provided Excel files: mapped by Type -> Breed -> Max Age
+const petData = {
+    "Dog": {
+        "Indie (Local)": 15, "Labrador Retriever": 14, "Golden Retriever": 13,
+        "German Shepherd": 13, "Pomeranian": 16, "Pug": 15, "Shih Tzu": 18,
+        "Beagle": 16, "Rottweiler": 10, "Doberman": 13, "Other": 15
+    },
+    "Cat": {
+        "Indie (Local/Mixed)": 20, "Persian": 17, "Siamese": 20, "Himalayan": 15,
+        "Maine Coon": 15, "Bengal": 16, "Other": 18
+    },
+    "Bird": {
+        "Budgie": 10, "Love Bird": 12, "Indian Ringneck": 25, "Cockatiel": 20,
+        "Mynah": 25, "Green Indian Parrot (Tota/Mithoo)": 25, "Finch": 10, "Other": 15
+    },
+    "Fish": {
+        "Goldfish": 30, "Betta (Fighter Fish)": 5, "Guppy": 3, "Tetra": 8,
+        "Koi / Carp": 40, "Molly": 5, "Angel Fish": 12, "Other": 8
+    },
+    "Rabbit": {
+        "Local/Mixed": 9, "New Zealand White": 6, "Angora": 12, "Other": 9
+    },
+    "Turtle": {
+        "Red-Eared Slider": 30, "Indian Tent Turtle": 20, "Other": 25
+    }
 };
 
+function handleBreedChange(selectId, customInputId) {
+    const breedSelect = document.getElementById(selectId);
+    const customInput = document.getElementById(customInputId);
+    
+    if (breedSelect.value === 'Other') {
+        customInput.style.display = 'block';
+    } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+    }
+}
+
 function updateBreeds() {
-    const typeSelect = document.getElementById('pet-type');
+    const typeSelect = document.getElementById('pet-type').value;
     const breedSelect = document.getElementById('pet-breed');
-    const otherInput = document.getElementById('pet-breed-other');
-    const selectedType = typeSelect.value;
+    const customInput = document.getElementById('custom-pet-breed');
+    
     breedSelect.innerHTML = '<option value="">Select Breed...</option>';
-    if (selectedType && petBreeds[selectedType]) {
+    customInput.style.display = 'none';
+    customInput.value = '';
+    
+    if (typeSelect && petData[typeSelect]) {
         breedSelect.disabled = false;
-        petBreeds[selectedType].forEach(breed => {
+        Object.keys(petData[typeSelect]).forEach(breed => {
             const option = document.createElement('option');
             option.value = breed; option.innerText = breed;
             breedSelect.appendChild(option);
         });
-    } else { breedSelect.disabled = true; }
-
-    if (selectedType === 'Other') {
-        breedSelect.style.display = 'none';
-        breedSelect.disabled = true;
-        otherInput.style.display = 'block';
-    } else {
-        breedSelect.style.display = '';
-        otherInput.style.display = 'none';
-        otherInput.value = '';
+    } else { 
+        breedSelect.disabled = true; 
     }
 }
 
 function updateBreedsForEdit() {
-    const typeSelect = document.getElementById('update-pet-type');
+    const typeSelect = document.getElementById('update-pet-type').value;
     const breedSelect = document.getElementById('update-pet-breed');
-    const otherInput = document.getElementById('update-pet-breed-other');
-    const selectedType = typeSelect.value;
+    const customInput = document.getElementById('custom-update-pet-breed');
+    
     breedSelect.innerHTML = '<option value="">Select Breed...</option>';
-    if (selectedType && petBreeds[selectedType]) {
+    customInput.style.display = 'none';
+    customInput.value = '';
+    
+    if (typeSelect && petData[typeSelect]) {
         breedSelect.disabled = false;
-        petBreeds[selectedType].forEach(breed => {
+        Object.keys(petData[typeSelect]).forEach(breed => {
             const option = document.createElement('option');
             option.value = breed; option.innerText = breed;
             breedSelect.appendChild(option);
         });
-    } else { breedSelect.disabled = true; }
-
-    if (selectedType === 'Other') {
-        breedSelect.style.display = 'none';
-        breedSelect.disabled = true;
-        otherInput.style.display = 'block';
-    } else {
-        breedSelect.style.display = '';
-        otherInput.style.display = 'none';
-        otherInput.value = '';
+    } else { 
+        breedSelect.disabled = true; 
     }
 }
 
@@ -263,7 +272,6 @@ async function loadUserPets() {
             else if (pet.pet_type === 'Rabbit') { icon = 'ti-carrot'; bgColor = '#fce7f3'; iconColor = '#be185d'; } 
             else if (pet.pet_type === 'Turtle') { icon = 'ti-ripple'; bgColor = '#ecfccb'; iconColor = '#4d7c0f'; }
 
-            // Use safe single quotes and ensure the ID is just a number
             const safePetName = escapeHTML(pet.name).replace(/'/g, "\\'").replace(/"/g, "&quot;");
             const petHTML = `
               <div class="pet-item" onclick="openPetModal(${parseInt(pet.id)}, '${safePetName}')">
@@ -298,16 +306,32 @@ async function savePet() {
     const name = document.getElementById('pet-name').value;
     const age = document.getElementById('pet-age').value;
 
-    if (type === 'Other') {
-        const customBreed = document.getElementById('pet-breed-other').value.trim();
-        if (!customBreed) { showAppAlert("Please specify your pet's type/breed!", "error"); return; }
-        breed = customBreed;
+    if (breed === 'Other') {
+        breed = document.getElementById('custom-pet-breed').value.trim() || 'Other';
     }
 
-    if (!type || !breed || !name || !age) { showAppAlert("Please fill out all fields!", "error"); return; }
+    if (!type || !breed || !name.trim() || !age.trim()) { 
+        showAppAlert("Please fill out all fields with valid text!", "error"); 
+        return; 
+    }
+    
+    // Strict Age check based on Excel data
+    const ageNum = parseFloat(age);
+    let maxAge = 60; // Absolute fallback
+    
+    // Check if the exact breed exists in our mapping, otherwise fallback to "Other" for that pet type
+    const lookupBreed = petData[type][breed] ? breed : "Other";
+    if (petData[type] && petData[type][lookupBreed]) {
+        maxAge = petData[type][lookupBreed];
+    }
 
-    if (!isValidPetAge(age)) {
-        showAppAlert("Please enter a realistic age, e.g. '2 months' or '2.7 years'.", "error");
+    if (isNaN(ageNum) || ageNum < 0 || ageNum > maxAge) {
+        showAppAlert(`Please enter a realistic age. The maximum age for this breed is approx ${maxAge} years.`, "error"); 
+        return;
+    }
+    
+    if (!isNaN(name)) {
+        showAppAlert("Pet name cannot be just numbers.", "error");
         return;
     }
 
@@ -320,7 +344,8 @@ async function savePet() {
         if (response.ok) {
             document.getElementById('add-pet-form').style.display = 'none';
             document.getElementById('pet-name').value = ''; document.getElementById('pet-age').value = ''; document.getElementById('pet-type').value = '';
-            document.getElementById('pet-breed-other').value = ''; document.getElementById('pet-breed-other').style.display = 'none';
+            document.getElementById('custom-pet-breed').value = '';
+            document.getElementById('custom-pet-breed').style.display = 'none';
             updateBreeds(); 
             loadUserPets(); 
             showAppAlert("Pet added successfully!", "success");
@@ -365,14 +390,22 @@ function prepareUpdate() {
     document.getElementById('pet-action-modal').style.display = 'none';
     document.getElementById('update-pet-name').value = pet.name;
     document.getElementById('update-pet-age').value = pet.age;
-    document.getElementById('update-pet-type').value = pet.pet_type;
     
+    document.getElementById('update-pet-type').value = pet.pet_type;
     updateBreedsForEdit();
-    if (pet.pet_type === 'Other') {
-        document.getElementById('update-pet-breed-other').value = pet.breed;
-    } else {
+
+    // Check if pet.breed exists in the dropdown options
+    const isStandardBreed = Object.keys(petData[pet.pet_type]).includes(pet.breed) && pet.breed !== 'Other';
+    
+    if (isStandardBreed) {
         document.getElementById('update-pet-breed').value = pet.breed;
+        document.getElementById('custom-update-pet-breed').style.display = 'none';
+    } else {
+        document.getElementById('update-pet-breed').value = 'Other';
+        document.getElementById('custom-update-pet-breed').value = pet.breed;
+        document.getElementById('custom-update-pet-breed').style.display = 'block';
     }
+    
     document.getElementById('update-pet-modal').style.display = 'flex';
 }
 
@@ -382,16 +415,31 @@ async function submitUpdate() {
     const name = document.getElementById('update-pet-name').value;
     const age = document.getElementById('update-pet-age').value;
 
-    if (type === 'Other') {
-        const customBreed = document.getElementById('update-pet-breed-other').value.trim();
-        if (!customBreed) { showAppAlert("Please specify your pet's type/breed!", "error"); return; }
-        breed = customBreed;
+    if (breed === 'Other') {
+        breed = document.getElementById('custom-update-pet-breed').value.trim() || 'Other';
     }
 
-    if (!type || !breed || !name || !age) { showAppAlert("Please fill out all fields!", "error"); return; }
+    if (!type || !breed || !name.trim() || !age.trim()) { 
+        showAppAlert("Please fill out all fields with valid text!", "error"); 
+        return; 
+    }
 
-    if (!isValidPetAge(age)) {
-        showAppAlert("Please enter a realistic age, e.g. '2 months' or '2.7 years'.", "error");
+    // Strict Age check based on Excel data
+    const ageNum = parseFloat(age);
+    let maxAge = 60; // Absolute fallback
+    
+    const lookupBreed = petData[type][breed] ? breed : "Other";
+    if (petData[type] && petData[type][lookupBreed]) {
+        maxAge = petData[type][lookupBreed];
+    }
+
+    if (isNaN(ageNum) || ageNum < 0 || ageNum > maxAge) {
+        showAppAlert(`Please enter a realistic age. The maximum age for this breed is approx ${maxAge} years.`, "error"); 
+        return;
+    }
+    
+    if (!isNaN(name)) {
+        showAppAlert("Pet name cannot be just numbers.", "error");
         return;
     }
 
@@ -408,7 +456,6 @@ async function submitUpdate() {
         } else { showAppAlert("Failed to update pet.", "error"); }
     } catch (error) { showAppAlert("Cannot connect to server.", "error"); }
 }
-
 // ==========================================
 // 3. DIET LOGIC
 // ==========================================
