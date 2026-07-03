@@ -59,17 +59,16 @@
                 <option value="Fish">Fish</option>
                 <option value="Rabbit">Rabbit</option>
                 <option value="Turtle">Turtle</option>
-                <option value="Other">Other</option>
           </select>
-
-          <select id="pet-breed" disabled>
+          
+          <select id="pet-breed" disabled onchange="handleBreedChange('pet-breed', 'custom-pet-breed')">
               <option value="">Select Breed first...</option>
           </select>
+          
+          <input type="text" id="custom-pet-breed" placeholder="Specify Custom Breed" maxlength="50" style="display: none; margin-bottom: 15px;" />
 
-          <input type="text" id="pet-breed-other" placeholder="Please specify your pet's type/breed" style="display: none;" />
-
-          <input type="text" id="pet-name" placeholder="Pet's Name (e.g. Charlie)" />
-          <input type="text" id="pet-age" placeholder="Age (e.g. 2 months or 2.7 years)" />
+          <input type="text" id="pet-name" placeholder="Pet's Name (e.g. Charlie)" maxlength="30" />
+          <input type="text" id="pet-age" placeholder="Age in Years (e.g., 2 for 2 years)" maxlength="20" />
 
           <div style="display: flex; gap: 10px;">
               <button class="btn btn-outline" style="flex: 1;" onclick="document.getElementById('add-pet-form').style.display='none'">Cancel</button>
@@ -332,17 +331,16 @@
                 <option value="Fish">Fish</option>
                 <option value="Rabbit">Rabbit</option>
                 <option value="Turtle">Turtle</option>
-                <option value="Other">Other</option>
           </select>
 
-          <select id="update-pet-breed" style="margin-bottom: 15px;">
+          <select id="update-pet-breed" onchange="handleBreedChange('update-pet-breed', 'custom-update-pet-breed')" style="margin-bottom: 15px;">
               <option value="">Select Breed...</option>
           </select>
+          
+          <input type="text" id="custom-update-pet-breed" placeholder="Specify Custom Breed" maxlength="50" style="display: none; margin-bottom: 15px;" />
 
-          <input type="text" id="update-pet-breed-other" placeholder="Please specify your pet's type/breed" style="display: none; margin-bottom: 15px;" />
-
-          <input type="text" id="update-pet-name" placeholder="Pet's Name" style="margin-bottom: 15px;" />
-          <input type="text" id="update-pet-age" placeholder="Age (e.g. 2 months)" />
+          <input type="text" id="update-pet-name" placeholder="Pet's Name" maxlength="30" style="margin-bottom: 15px;" />
+          <input type="text" id="update-pet-age" placeholder="Age in Years" maxlength="20" />
 
           <div style="display: flex; gap: 10px; margin-top: 15px;">
               <button class="btn btn-outline" style="flex: 1;" onclick="document.getElementById('update-pet-modal').style.display='none'">Cancel</button>
