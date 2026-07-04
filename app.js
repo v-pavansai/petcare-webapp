@@ -117,7 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
     appContainer.setAttribute('data-theme', 'dark');
     if (themeIcon) themeIcon.className = 'ti ti-sun';
   }
-
+  
+  setTimeout(() => {
+      const activeNav = document.querySelector('.nav-item.active');
+      if (activeNav) updateNavSlider(activeNav);
+  }, 100);
   loadUserPets(); 
 });
 
