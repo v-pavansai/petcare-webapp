@@ -80,7 +80,25 @@
     position: relative; 
     transition: background-color 0.3s ease, color 0.3s ease;
   }
-  
+
+  @media (min-width: 481px) {
+      body {
+          background-image: url('bg_pc.png'); /* YOUR DESKTOP BACKGROUND */
+          background-size: cover;
+          background-position: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      .phone {
+          max-width: 450px;
+          height: 90vh;
+          border-radius: 30px;
+          border: 6px solid rgba(255, 255, 255, 0.8);
+          box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      }
+  }  
+    
   .status-bar { padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: center; }
   .status-bar span { font-size: 13px; font-weight: 600; color: var(--text); transition: color 0.3s ease; }
   .status-icons { display: flex; gap: 6px; align-items: center; color: var(--text); transition: color 0.3s ease;}
