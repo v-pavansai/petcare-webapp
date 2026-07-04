@@ -142,6 +142,23 @@ function logout() {
     window.location.href = "login.html";
 }
 
+function updateNavSlider(activeElement) {
+    const slider = document.getElementById('nav-slider');
+    if (slider && activeElement) {
+        if (slider.style.opacity === '0' || slider.style.opacity === '') {
+            slider.style.opacity = '1'; // Fade in on first load
+        }
+        slider.style.width = activeElement.offsetWidth + 'px';
+        slider.style.left = activeElement.offsetLeft + 'px';
+    }
+}
+
+// Ensure the slider moves correctly if the user resizes the desktop window
+window.addEventListener('resize', () => {
+    const activeNav = document.querySelector('.nav-item.active');
+    if (activeNav) updateNavSlider(activeNav);
+});
+
 function navTo(screenId, navElement = null) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
@@ -149,6 +166,7 @@ function navTo(screenId, navElement = null) {
   if (navElement) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     navElement.classList.add('active');
+    updateNavSlider(navElement); // Trigger slider animation
   }
 
   if (screenId === 'vets') {
