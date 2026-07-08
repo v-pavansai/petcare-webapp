@@ -73,22 +73,22 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
+  /* --- FIX: MOVED ITEMS UP AND CENTERED THEM VERTICALLY --- */
   .content { 
       flex: 1; 
       overflow-y: auto; 
-      padding: 40px 24px 24px; 
+      padding: 10px 24px 24px; /* Reduced from 40px to pull everything up */
       display: flex; 
       flex-direction: column; 
-      justify-content: flex-start;
-      align-items: center; /* Forces horizontal centering */
+      justify-content: center; /* Centers content perfectly in the free space */
+      align-items: center; 
       width: 100%;
   }
   .content::-webkit-scrollbar { display: none; }
 
-  /* --- EXPLICIT CENTERING FOR ALL CONTAINERS --- */
   .header-logo { 
       text-align: center; 
-      margin: 0 auto 20px auto;
+      margin: 0 auto 15px auto; /* Tighter margin */
       width: 100%;
   }
   .header-logo i { font-size: 48px; color: var(--blue); }
@@ -108,7 +108,7 @@
       border-radius: 20px;
       width: 100%;
       max-width: 250px;
-      margin: 0 auto 20px auto; /* Centers the toggle perfectly */
+      margin: 0 auto 20px auto; 
       padding: 4px;
       box-shadow: var(--card-shadow);
   }
@@ -126,7 +126,7 @@
       gap: 5px;
       width: 100%;
       max-width: 400px;
-      margin: 0 auto; /* Centers the login box perfectly */
+      margin: 0 auto; 
   }
 
   #forgot-password-link {
@@ -135,11 +135,11 @@
       margin: -5px auto 15px auto;
   }
 
-  /* --- NEW DESKTOP LOGIC (Triggered ONLY on PCs/Tablets > 768px) --- */
+  /* --- DESKTOP LOGIC --- */
   @media (min-width: 768px) {
       body {
           background-color: #ffffff; 
-          background-image: url('bg_pc.png'); /* Use your new PC background */
+          background-image: url('41917.png'); 
           background-size: contain; 
           background-position: center;
           background-repeat: no-repeat;
@@ -158,13 +158,13 @@
           min-height: 550px;
           max-height: 90vh;
           border-radius: var(--radius);
-          background-image: none; /* Removes the mobile background */
-          background-color: var(--surface); /* Solid clean panel */
+          background-image: none; 
+          background-color: var(--surface); 
           border: 1px solid var(--border);
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+          transform: translateY(-3vh); /* OPTICAL CENTERING: Nudges the whole white box up slightly */
       }
       
-      /* Blend the inner card into the white panel on PC */
       .card {
           border: none;
           box-shadow: none;
