@@ -69,7 +69,7 @@
   .phone { 
     width: 100%; height: 100%; 
     background-color: var(--bg); 
-    /* Mobile background image (if you still want it on mobile phones) */
+    /* Mobile background image */
     background-image: url('bg.png'); 
     background-size: cover; background-position: center;
     color: var(--text); display: flex; flex-direction: column; position: relative; 
@@ -110,12 +110,8 @@
           border: 1px solid var(--border);
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       }
-      
-      .content {
-          justify-content: center;
-      }
   }
-    
+  
   .status-bar { padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: center; }
   .status-bar span { font-size: 13px; font-weight: 600; color: var(--text); transition: color 0.3s ease; }
   .status-icons { display: flex; gap: 6px; align-items: center; color: var(--text); transition: color 0.3s ease;}
@@ -128,9 +124,26 @@
   .icon-btn:active { transform: scale(0.95); }
   .btn-alert { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-  .content { flex: 1; overflow-y: auto; padding: 40px 24px 24px; display: flex; flex-direction: column; justify-content: flex-start;}
+  /* --- GLOBALLY CENTERED CONTENT --- */
+  .content { 
+      flex: 1; 
+      overflow-y: auto; 
+      padding: 40px 24px 24px; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: flex-start;
+      align-items: center; /* This forces everything to center horizontally on ALL devices */
+  }
   .content::-webkit-scrollbar { display: none; }
   
+  /* Constrain the width so it never stretches too far, and auto-margins it */
+  .card, .toggle-container, .header-logo, #forgot-password-link {
+      width: 100%;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+  }
+
   .sec-label { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px; font-family: var(--font-display); transition: color 0.3s ease;}
   
   input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: var(--radius-sm); border: 1px solid var(--border); font-size: 14px; background: var(--surface); color: var(--text); font-family: var(--font); outline: none; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;}
