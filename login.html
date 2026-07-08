@@ -57,24 +57,31 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
   /* --- GLOBAL LAYOUT --- */
+/* --- GLOBAL LAYOUT --- */
   body { 
     font-family: var(--font); 
     margin: 0; 
     padding: 0;
-    width: 100vw;
-    height: 100dvh;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh; 
     overflow: hidden;
+    background-color: var(--bg); 
+    background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg.png'); 
+    background-size: cover; 
+    background-position: center;
+    transition: background-color 0.3s ease;
   }
   
-  /* Mobile View */
   .phone { 
-    width: 100%; height: 100%; 
-    background-color: var(--bg); 
-    /* Gradient overlay automatically switches based on theme! */
-    background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg.png'); 
-    background-size: cover; background-position: center;
-    color: var(--text); display: flex; flex-direction: column; position: relative; 
-    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%; 
+    height: 100%; 
+    background: transparent; /* Lets the full-screen body background show through */
+    color: var(--text); 
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
+    transition: color 0.3s ease;
   }
 
   .content { 
@@ -143,8 +150,7 @@
   @media (min-width: 768px) {
       body {
           background-color: var(--bg); 
-          /* The gradient overlay dims this image automatically in dark mode */
-          background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png'); 
+          background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('41917.png'); 
           background-size: contain; 
           background-position: center;
           background-repeat: no-repeat;
@@ -156,8 +162,11 @@
 
       [data-theme="dark"] body {
           background-color: #1a1a1a; 
-          /* IF 42095.jpg is a dedicated dark-themed image, remove the '/*' and '*/' on the line below to use it instead of the dimming overlay! */
-          /* background-image: url('42095.jpg'); */
+          background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('42095.jpg'); 
+      }
+
+      .header-logo {
+          margin: 0 auto 15px auto; 
       }
 
       .phone {
@@ -166,8 +175,8 @@
           min-height: 550px;
           max-height: 90vh;
           border-radius: var(--radius);
-          background-image: none; /* Removes the mobile background */
-          background-color: var(--surface); /* Solid clean panel */
+          background-image: none;
+          background-color: var(--surface);
           border: 1px solid var(--border);
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
           transform: translateY(-3vh); 
