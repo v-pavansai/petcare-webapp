@@ -88,7 +88,8 @@
 
   .header-logo { 
       text-align: center; 
-      margin: 0 auto 15px auto; /* Tighter margin */
+      /* The -30px pulls the logo upwards. Increase to -40px or -50px to move it even higher! */
+      margin: -30px auto 20px auto; 
       width: 100%;
   }
   .header-logo i { font-size: 48px; color: var(--blue); }
@@ -108,7 +109,8 @@
       border-radius: 20px;
       width: 100%;
       max-width: 250px;
-      margin: 0 auto 20px auto; 
+      /* Increased bottom margin from 20px to 35px to push it further above the login box */
+      margin: 0 auto 35px auto; 
       padding: 4px;
       box-shadow: var(--card-shadow);
   }
