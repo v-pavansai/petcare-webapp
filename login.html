@@ -30,7 +30,8 @@
     --font: 'Poppins', sans-serif; 
     --font-display: 'Poppins', sans-serif;
     
-    --bg-overlay: rgba(255, 255, 255, 0.50); 
+    /* Light mode background overlay (Barely visible) */
+    --bg-overlay: rgba(255, 255, 255, 0.30); 
     --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); 
   }
 
@@ -48,8 +49,8 @@
     --blue-light: rgba(96, 165, 250, 0.15);
     --amber-light: rgba(239, 159, 39, 0.15);
     
-    --bg-overlay: rgba(55, 54, 58, 0.75); 
-    /* Reduced Shadow */
+    /* Dark mode background overlay (Makes the background heavily dimmed!) */
+    --bg-overlay: rgba(26, 26, 26, 0.85); 
     --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
   
@@ -65,32 +66,33 @@
     overflow: hidden;
   }
   
+  /* Mobile View */
   .phone { 
     width: 100%; height: 100%; 
     background-color: var(--bg); 
-    background-image: url('bg.png'); /* Standard Mobile Background */
+    /* Gradient overlay automatically switches based on theme! */
+    background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg.png'); 
     background-size: cover; background-position: center;
     color: var(--text); display: flex; flex-direction: column; position: relative; 
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* --- FIX: MOVED ITEMS UP AND CENTERED THEM VERTICALLY --- */
   .content { 
       flex: 1; 
       overflow-y: auto; 
-      padding: 8px 24px 24px; /* Reduced from 40px to pull everything up */
+      padding: 10px 24px 24px; 
       display: flex; 
       flex-direction: column; 
-      justify-content: center; /* Centers content perfectly in the free space */
+      justify-content: center; 
       align-items: center; 
       width: 100%;
   }
   .content::-webkit-scrollbar { display: none; }
 
+  /* --- EXPLICIT CENTERING FOR ALL CONTAINERS --- */
   .header-logo { 
       text-align: center; 
-      /* The -30px pulls the logo upwards. Increase to -40px or -50px to move it even higher! */
-      margin: -108px auto 20px auto; 
+      margin: 0 auto 15px auto; 
       width: 100%;
   }
   .header-logo i { font-size: 48px; color: var(--blue); }
@@ -110,8 +112,7 @@
       border-radius: 20px;
       width: 100%;
       max-width: 250px;
-      /* Increased bottom margin from 20px to 35px to push it further above the login box */
-      margin: 0 auto 24px auto; 
+      margin: 0 auto 20px auto; 
       padding: 4px;
       box-shadow: var(--card-shadow);
   }
@@ -138,21 +139,25 @@
       margin: -5px auto 15px auto;
   }
 
-  /* --- DESKTOP LOGIC --- */
+  /* --- DESKTOP LOGIC (Triggered ONLY on PCs/Tablets > 768px) --- */
   @media (min-width: 768px) {
       body {
-          background-color: #ffffff; 
-          background-image: url('bg_pc.png'); 
+          background-color: var(--bg); 
+          /* The gradient overlay dims this image automatically in dark mode */
+          background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png'); 
           background-size: contain; 
           background-position: center;
           background-repeat: no-repeat;
           display: flex;
           align-items: center;
           justify-content: center;
+          transition: background-color 0.3s ease;
       }
 
       [data-theme="dark"] body {
           background-color: #1a1a1a; 
+          /* IF 42095.jpg is a dedicated dark-themed image, remove the '/*' and '*/' on the line below to use it instead of the dimming overlay! */
+          /* background-image: url('42095.jpg'); */
       }
 
       .phone {
@@ -161,11 +166,11 @@
           min-height: 550px;
           max-height: 90vh;
           border-radius: var(--radius);
-          background-image: none; 
-          background-color: var(--surface); 
+          background-image: none; /* Removes the mobile background */
+          background-color: var(--surface); /* Solid clean panel */
           border: 1px solid var(--border);
           box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-          transform: translateY(-3vh); /* OPTICAL CENTERING: Nudges the whole white box up slightly */
+          transform: translateY(-3vh); 
       }
       
       .card {
