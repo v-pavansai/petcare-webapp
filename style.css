@@ -14,7 +14,7 @@
     --radius: 14px; --radius-sm: 8px;
     --font: 'Poppins', sans-serif; 
     --font-display: 'Poppins', sans-serif;
-  }
+}
 
 [data-theme="dark"] {
     --bg: #37363a; 
@@ -28,178 +28,199 @@
     --blue-dark: #537295; 
     --blue-light: rgba(96, 165, 250, 0.15);
     --amber-light: rgba(239, 159, 39, 0.15);
-  }
-  
-  /* --- GLOBAL STYLES --- */
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  
-  body { 
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
     font-family: var(--font); 
     background: var(--bg); 
-    margin: 0; 
-    padding: 0; 
-    width: 100vw; 
-    height: 100dvh; 
+    margin: 0; padding: 0; 
+    width: 100vw; height: 100dvh; 
     overflow: hidden; 
-  }
-  
-  /* --- APP CONTAINER (Now Full Screen) --- */
-  .phone { 
-    width: 100%; 
-    height: 100%; 
-    background: var(--bg); 
+}
+
+/* Phone container acts as a flex column to keep header top, content middle, nav bottom */
+.phone { 
+    width: 100%; height: 100%; 
+    background-color: var(--bg); 
     color: var(--text);
-    display: flex; 
-    flex-direction: column; 
+    display: flex; flex-direction: column; 
     position: relative; 
     transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  /* --- HEADER & NAVIGATION --- */
-  .status-bar { padding: 14px 24px 0; display: flex; justify-content: space-between; align-items: center; }
-  .status-bar span { font-size: 13px; font-weight: 600; color: var(--text); }
-  .status-icons { display: flex; gap: 6px; align-items: center; color: var(--text); }
-  
-  .topbar { padding: 15px 24px; display: flex; align-items: center; justify-content: space-between; background: var(--bg); position: sticky; top: 0; z-index: 10;}
-  .appname { font-family: var(--font-display); font-size: 26px;font-weight:600; color: var(--pawcare-brand); }
-  
-  .top-actions { display: flex; gap: 10px; }
-  .icon-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; font-size: 20px; transition: 0.2s;}
-  .icon-btn:active { transform: scale(0.95); }
-  .btn-alert { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); }
+}
 
-  /* --- CONTENT SCREENS --- */
-  .content { flex: 1; overflow-y: auto; padding: 0 24px 24px; display: flex; flex-direction: column; gap: 20px; }
-  .content::-webkit-scrollbar { display: none; }
-  
-  .screen { display: none; flex-direction: column; gap: 20px; animation: fadeIn 0.2s ease; }
-  .screen.active { display: flex; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+/* --- HEADER & NAVIGATION --- */
+.topbar { 
+    padding: 15px 24px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    background: var(--surface); 
+    position: sticky; top: 0; z-index: 10;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+}
+.appname { font-family: var(--font-display); font-size: 26px; font-weight:600; color: var(--pawcare-brand); transition: color 0.3s ease;}
+.top-actions { display: flex; gap: 10px; align-items: center; }
+.icon-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border); font-size: 20px; transition: 0.2s; background: transparent; color: var(--text-2);}
+.icon-btn:active { transform: scale(0.95); }
 
-  .sec-label { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 12px; font-family: var(--font-display); }
-  
-  /* --- UI COMPONENTS --- */
-  input, select, textarea { 
-      width: 100%; 
-      padding: 14px; 
-      margin-bottom: 15px; 
-      border-radius: var(--radius-sm); 
-      border: 1px solid var(--border); 
-      font-size: 14px; 
-      background: var(--surface); 
-      color: var(--text); 
-      font-family: var(--font); 
-      outline: none; 
-      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--blue); }
-  
-  /* Specific styling for dropdowns to add custom arrows */
-  select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%236b6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      background-size: 16px;
-      cursor: pointer;
-  }
-  
-  select:disabled { opacity: 0.6; cursor: not-allowed; }
+/* --- CONTENT SCREENS --- */
+.content { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 24px; 
+    display: flex; flex-direction: column; gap: 20px; 
+    width: 100%;
+}
+.content::-webkit-scrollbar { display: none; }
 
-  /* Adapt dropdown arrow color for Dark Mode */
-  [data-theme="dark"] select {
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
-  }
-  
-  .btn { width: 100%; padding: 14px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); transition: 0.2s;}
-  .btn:active { transform: scale(0.98); }
-  .btn-primary { background: var(--blue); color: #fff; }
-  .btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
-  
-  .search-wrap { position: relative; }
-  .search-wrap input { padding-left: 40px; background: var(--surface); border-radius: 30px; }
-  .search-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--text-3); }
+.screen { display: none; flex-direction: column; gap: 20px; animation: fadeIn 0.2s ease; }
+.screen.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-  .pet-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); margin-bottom: 10px; cursor: pointer; transition: 0.2s;}
-  .pet-item:active { transform: scale(0.98); }
-  .pet-info { display: flex; align-items: center; gap: 15px; }
-  .pet-icon { width: 45px; height: 45px; border-radius: 50%; background: var(--blue-light); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 24px;}
-  .pet-name { font-size: 16px; font-weight: 600; color: var(--text); }
-  .pet-type { font-size: 13px; color: var(--text-2); text-transform: capitalize; }
+.sec-label { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 12px; font-family: var(--font-display); transition: color 0.3s ease; }
 
-  .card { background: var(--surface); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); }
-  
-  /* --- BOTTOM NAVBAR --- */
-  .navbar { display: flex; border-top: 1px solid var(--border); padding: 12px 5px 20px; background: var(--surface); justify-content: space-between;}
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px; color: var(--text-3); }
-  .nav-item i { font-size: 22px; }
-  .nav-item span { font-size: 10px; font-weight: 500; }
-  .nav-item.active { color: var(--blue); }
+/* --- UI COMPONENTS --- */
+.btn { width: 100%; padding: 14px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font); transition: 0.2s;}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
 
-  /* --- MODAL CSS --- */
-  .modal-overlay {
-      display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
-      background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; animation: fadeIn 0.2s;
-  }
-/* --- DESKTOP SPECIFIC LAYOUT (Floating Pill & Full Header) --- */
-/* --- PC OVERRIDES (Split-Screen Layout) --- */
-  @media (min-width: 768px) {
-      body {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: #e2e8f0; /* Soft neutral backdrop behind the main app window */
-      }
-      
-      .phone {
-          flex-direction: row; /* Flips from vertical to horizontal */
-          max-width: 900px;
-          width: 90%;
-          height: 600px;
-          min-height: auto;
-          background-color: var(--surface);
-          border-radius: 24px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-          overflow: hidden; /* Keeps the background image inside the rounded corners */
-          
-          /* The Left Side Image */
-          background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png');
-          background-size: 50% 100%; /* Forces the image to exactly the left half */
-          background-position: left center;
-          background-repeat: no-repeat;
-      }
+.pet-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); margin-bottom: 10px; cursor: pointer; transition: 0.2s;}
+.pet-item:active { transform: scale(0.98); }
+.pet-info { display: flex; align-items: center; gap: 15px; }
+.pet-icon { width: 45px; height: 45px; border-radius: 50%; background: var(--blue-light); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 24px; transition: 0.3s ease;}
+.pet-name { font-size: 16px; font-weight: 600; color: var(--text); transition: color 0.3s ease;}
+.pet-type { font-size: 13px; color: var(--text-2); text-transform: capitalize; transition: color 0.3s ease;}
 
-      .content {
-          flex: 1; 
-          margin-left: 50%; /* Pushes the login form to the right half */
-          max-width: 50%;
-          padding: 40px 50px;
-          border-radius: 0;
-          box-shadow: none;
-          background-color: var(--surface);
-          justify-content: center; /* Perfectly centers the form vertically */
-      }
+/* --- BOTTOM NAVBAR (Your exact provided code) --- */
+.navbar { 
+    display: flex; 
+    border-top: 1px solid var(--border); 
+    padding: 12px 5px 20px; 
+    background: var(--surface); 
+    justify-content: space-between;
+    position: relative; /* Crucial for the slider */
+    width: 100%;
+}
 
-      /* Pins the dark mode toggle to the top right of the white form area */
-      .topbar {
-          position: absolute !important;
-          top: 20px !important;
-          right: 20px !important;
-          width: auto !important;
-          padding: 0 !important;
-          background: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-          z-index: 99 !important;
-      }
-      
-      .top-actions {
-          transform: none !important;
-      }
-      
-      .card {
-          border: none; box-shadow: none; background: transparent; padding: 0;
-      }
-  }
+.nav-slider {
+    position: absolute;
+    top: 12px;
+    bottom: 20px;
+    background: var(--blue-light);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    z-index: 1;
+    opacity: 0; /* Hidden until Javascript calculates position */
+}
+
+[data-theme="dark"] .nav-slider {
+    background: rgba(96, 165, 250, 0.15); 
+}
+
+.nav-item { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 4px; 
+    cursor: pointer; 
+    padding: 8px 4px; 
+    color: var(--text-3); 
+    z-index: 2; /* Sit above the slider */
+    position: relative;
+    transition: color 0.3s;
+}
+.nav-item i { font-size: 22px; }
+.nav-item span { font-size: 10px; font-weight: 500; }
+
+.nav-item.active { color: var(--blue-dark); }
+[data-theme="dark"] .nav-item.active { color: var(--pawcare-brand); }
+
+/* --- MODAL CSS --- */
+.modal-overlay {
+    display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
+    background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; animation: fadeIn 0.2s;
+}
+
+/* --- DESKTOP SPECIFIC LAYOUT (Your block + scaling tweaks) --- */
+@media (min-width: 481px) {
+    body {
+        background: var(--bg); /* Full width desktop background */
+    }
+    .phone {
+        max-width: 100%;
+        height: 100vh;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    
+    .topbar {
+        padding: 20px 50px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        /* Lock the topbar elements to opposite sides */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+    .appname {
+        font-size: 28px;
+    }
+    
+    .content {
+        padding: 40px 50px 120px 50px; /* Extra bottom padding for the floating pill */
+        max-width: 1000px; /* Keeps content nicely grouped in the center */
+        margin: 0 auto;
+        width: 100%;
+    }
+    
+    /* PC UI Content Scaling */
+    .sec-label { font-size: 24px; margin-bottom: 20px; }
+    .pet-item { padding: 20px 30px; border-radius: 20px; margin-bottom: 20px; transition: transform 0.2s, box-shadow 0.2s; }
+    .pet-item:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    .pet-icon { width: 60px; height: 60px; font-size: 28px; }
+    .pet-name { font-size: 20px; }
+    .pet-type { font-size: 15px; }
+    .btn-outline { padding: 18px; font-size: 16px; border-radius: 20px; }
+    
+    /* The floating pill navbar */
+    .navbar {
+        position: fixed !important;
+        bottom: 30px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: auto !important;
+        min-width: 600px !important;
+        border-radius: 50px !important;
+        border: 1px solid var(--border) !important;
+        padding: 10px 20px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+        background: var(--surface) !important;
+        gap: 15px !important;
+        border-top: none !important; 
+        right: auto !important;
+    }
+    [data-theme="dark"] .navbar {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important;
+    }
+    .nav-slider {
+        top: 10px !important; 
+        bottom: 10px !important;
+        border-radius: 40px !important;
+    }
+    .nav-item {
+        padding: 10px 20px !important;
+        flex: unset !important; 
+        flex-grow: 1 !important; /* Evenly space items inside pill */
+    }
+    .nav-item span {
+        font-size: 12px !important;
+    }
+}
