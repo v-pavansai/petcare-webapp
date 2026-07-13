@@ -1390,3 +1390,20 @@ async function saveNewUsername() {
       closeEditUsernameModal(); 
   }
 }
+// --- NAVBAR SLIDER LOGIC ---
+function updateNavSlider(activeElement) {
+    const slider = document.getElementById('nav-slider');
+    if (slider && activeElement) {
+        if (slider.style.opacity === '0' || slider.style.opacity === '') {
+            slider.style.opacity = '1'; // Fades in on first click
+        }
+        slider.style.width = activeElement.offsetWidth + 'px';
+        slider.style.left = activeElement.offsetLeft + 'px';
+    }
+}
+
+// Ensure the slider stays aligned if the PC window is resized
+window.addEventListener('resize', () => {
+    const activeNav = document.querySelector('.nav-item.active');
+    if (activeNav) updateNavSlider(activeNav);
+});
