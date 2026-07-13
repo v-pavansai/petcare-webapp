@@ -144,99 +144,62 @@
       background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; animation: fadeIn 0.2s;
   }
 /* --- DESKTOP SPECIFIC LAYOUT (Floating Pill & Full Header) --- */
-@media (min-width: 768px) {
-    .topbar {
-        padding: 20px 50px;
-    }
-    .appname { font-size: 28px; }
-    
-    .content {
-        padding-top: 40px;
-        padding-bottom: 140px; /* Room for the higher floating pill */
-        max-width: 800px;
-        margin: 0 auto; /* Keeps the main content perfectly centered */
-    }
-    
-    /* FIX: The perfectly centered, floating pill navbar */
-    .navbar {
-        position: fixed !important; 
-        bottom: 45px !important; /* Lifted slightly higher */
-        left: 50% !important; /* Moves it to the exact middle */
-        right: auto !important; /* Un-sticks it from the right edge */
-        transform: translateX(-50%) !important; /* Perfectly balances the center weight */
-        
-        width: auto !important;
-        min-width: 500px !important;
-        border-radius: 50px !important;
-        border: 1px solid var(--border) !important;
-        padding: 10px 20px !important;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
-    }
-    
-    [data-theme="dark"] .navbar {
-        box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
-    }
-    
-    .nav-slider {
-        top: 10px !important; 
-        bottom: 10px !important;
-        border-radius: 40px !important;
-    }
-    
-    .nav-item {
-        padding: 10px 20px;
-        flex: unset; 
-        flex-grow: 1; /* Distributes tabs evenly inside the pill */
-    }
-    
-    .nav-item span {
-        font-size: 12px;
-    }
-    /* --- PC CONTENT SCALING --- */
-    /* Widens the main container so it doesn't look cramped */
-    .content {
-        max-width: 1000px !important; 
-        padding-top: 60px !important;
-    }
+/* --- PC OVERRIDES (Split-Screen Layout) --- */
+  @media (min-width: 768px) {
+      body {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #e2e8f0; /* Soft neutral backdrop behind the main app window */
+      }
+      
+      .phone {
+          flex-direction: row; /* Flips from vertical to horizontal */
+          max-width: 900px;
+          width: 90%;
+          height: 600px;
+          min-height: auto;
+          background-color: var(--surface);
+          border-radius: 24px;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+          overflow: hidden; /* Keeps the background image inside the rounded corners */
+          
+          /* The Left Side Image */
+          background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png');
+          background-size: 50% 100%; /* Forces the image to exactly the left half */
+          background-position: left center;
+          background-repeat: no-repeat;
+      }
 
-    /* Scales up the Section Labels (e.g., "Your Pets") */
-    .sec-label {
-        font-size: 24px !important;
-        margin-bottom: 20px !important;
-    }
+      .content {
+          flex: 1; 
+          margin-left: 50%; /* Pushes the login form to the right half */
+          max-width: 50%;
+          padding: 40px 50px;
+          border-radius: 0;
+          box-shadow: none;
+          background-color: var(--surface);
+          justify-content: center; /* Perfectly centers the form vertically */
+      }
 
-    /* Makes the pet cards larger, rounder, and adds a desktop hover effect */
-    .pet-item {
-        padding: 20px 30px !important;
-        border-radius: 20px !important;
-        margin-bottom: 20px !important;
-        transition: transform 0.2s, box-shadow 0.2s !important;
-    }
-    
-    .pet-item:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
-    }
-
-    /* Enlarges the pet icon and text */
-    .pet-icon {
-        width: 60px !important; 
-        height: 60px !important; 
-        font-size: 28px !important;
-    }
-    
-    .pet-name {
-        font-size: 20px !important;
-    }
-
-    .pet-type {
-        font-size: 15px !important;
-    }
-
-    /* Enlarges the "Add a new pet" button */
-    .btn-outline {
-        padding: 20px !important;
-        font-size: 16px !important;
-        border-radius: 20px !important;
-    }
-}
+      /* Pins the dark mode toggle to the top right of the white form area */
+      .topbar {
+          position: absolute !important;
+          top: 20px !important;
+          right: 20px !important;
+          width: auto !important;
+          padding: 0 !important;
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          z-index: 99 !important;
+      }
+      
+      .top-actions {
+          transform: none !important;
+      }
+      
+      .card {
+          border: none; box-shadow: none; background: transparent; padding: 0;
+      }
+  }
