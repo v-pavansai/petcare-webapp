@@ -114,26 +114,32 @@
           justify-content: center;
       }
 
-      /* FIX: Topbar becomes invisible and overlaps the card */
+      /* FIX: The Zero-Height Overflow Trick */
       .topbar {
-          position: relative; 
+          position: relative !important;
+          z-index: 99 !important; /* Forces it to the very front */
           width: 100%; 
           max-width: 420px;
+          height: 0 !important; /* Takes up no physical vertical space */
+          min-height: 0 !important;
+          padding: 0 !important;
+          margin: 0 !important;
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
-          padding: 20px 20px 0 0;
-          margin-bottom: -55px; /* This negative margin pulls the card UP underneath the button */
-          z-index: 20; /* Keeps the button clickable above the card */
+      }
+      
+      /* Nudges the button inside the boundaries of the card below it */
+      .top-actions {
+          transform: translate(-15px, 20px);
       }
 
-      /* FIX: Content is now a single, beautiful seamless block */
       .content {
           max-width: 420px;
           width: 100%;
           flex: none; 
-          /* Reduced top padding from 35px to 25px to nudge credentials UP */
-          padding: 25px 25px 35px 25px; 
+          /* Top padding set to 40px to give the logo breathing room under the button */
+          padding: 40px 25px 35px 25px; 
           border-radius: 24px;
           background-color: var(--surface); 
           border: 1px solid var(--border);
