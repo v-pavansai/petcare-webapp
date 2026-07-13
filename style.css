@@ -192,4 +192,51 @@
     .nav-item span {
         font-size: 12px;
     }
+    /* --- PC CONTENT SCALING --- */
+    /* Widens the main container so it doesn't look cramped */
+    .content {
+        max-width: 1000px !important; 
+        padding-top: 60px !important;
+    }
+
+    /* Scales up the Section Labels (e.g., "Your Pets") */
+    .sec-label {
+        font-size: 24px !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Makes the pet cards larger, rounder, and adds a desktop hover effect */
+    .pet-item {
+        padding: 20px 30px !important;
+        border-radius: 20px !important;
+        margin-bottom: 20px !important;
+        transition: transform 0.2s, box-shadow 0.2s !important;
+    }
+    
+    .pet-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+    }
+
+    /* Enlarges the pet icon and text */
+    .pet-icon {
+        width: 60px !important; 
+        height: 60px !important; 
+        font-size: 28px !important;
+    }
+    
+    .pet-name {
+        font-size: 20px !important;
+    }
+
+    .pet-type {
+        font-size: 15px !important;
+    }
+
+    /* Enlarges the "Add a new pet" button */
+    .btn-outline {
+        padding: 20px !important;
+        font-size: 16px !important;
+        border-radius: 20px !important;
+    }
 }
