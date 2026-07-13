@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <script>
     if (localStorage.getItem('pawcare_user_email')) {
         window.location.replace("index.html");
@@ -114,34 +114,32 @@
           justify-content: center;
       }
 
-      /* FIX: The topbar becomes the TOP half of the unified login card */
+      /* FIX: Topbar becomes invisible and overlaps the card */
       .topbar {
           position: relative; 
           width: 100%; 
           max-width: 420px;
-          background-color: var(--surface);
-          border: 1px solid var(--border);
-          border-bottom: none; /* Connects seamlessly to content */
-          border-radius: 24px 24px 0 0; /* Rounds only the top corners */
-          padding: 20px 25px 0 25px;
-          box-shadow: 0 -10px 30px rgba(0,0,0,0.05); /* Soft shadow for top edge */
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 20px 20px 0 0;
+          margin-bottom: -55px; /* This negative margin pulls the card UP underneath the button */
+          z-index: 20; /* Keeps the button clickable above the card */
       }
 
-      /* FIX: The content becomes the BOTTOM half of the unified login card */
+      /* FIX: Content is now a single, beautiful seamless block */
       .content {
           max-width: 420px;
+          width: 100%;
           flex: none; 
-          /* Shifts credentials UP by reducing top padding to 0 */
-          padding: 0px 25px 35px 25px; 
-          border-radius: 0 0 24px 24px; /* Rounds only the bottom corners */
+          /* Reduced top padding from 35px to 25px to nudge credentials UP */
+          padding: 25px 25px 35px 25px; 
+          border-radius: 24px;
           background-color: var(--surface); 
           border: 1px solid var(--border);
-          border-top: none; /* Connects seamlessly to topbar */
-          box-shadow: 0 15px 35px rgba(0,0,0,0.15); /* Shadow for bottom edge */
-      }
-      
-      .header-logo {
-          margin-top: -10px; /* Pulls logo slightly higher */
+          box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+          position: relative;
+          z-index: 10;
       }
 
       .card {
