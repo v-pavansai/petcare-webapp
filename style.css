@@ -143,38 +143,53 @@
       display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
       background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; animation: fadeIn 0.2s;
   }
-  /* --- PC MAIN APP & PILL NAVBAR --- */
+/* --- DESKTOP SPECIFIC LAYOUT (Floating Pill & Full Header) --- */
 @media (min-width: 768px) {
+    .topbar {
+        padding: 20px 50px;
+    }
+    .appname { font-size: 28px; }
+    
     .content {
-        /* Centers main app content and stops it from stretching infinitely */
+        padding-top: 40px;
+        padding-bottom: 140px; /* Room for the higher floating pill */
         max-width: 800px;
-        margin: 0 auto;
-        padding-bottom: 120px; /* Ensures content doesn't hide behind the floating pill */
+        margin: 0 auto; /* Keeps the main content perfectly centered */
     }
     
+    /* FIX: The perfectly centered, floating pill navbar */
     .navbar {
-        /* Converts the full-width bottom bar into a floating pill */
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: max-content;
-        min-width: 500px;
-        border-radius: 50px;
-        border: 1px solid var(--border);
-        padding: 10px 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        border-top: none; 
+        position: fixed !important; 
+        bottom: 45px !important; /* Lifted slightly higher */
+        left: 50% !important; /* Moves it to the exact middle */
+        right: auto !important; /* Un-sticks it from the right edge */
+        transform: translateX(-50%) !important; /* Perfectly balances the center weight */
+        
+        width: auto !important;
+        min-width: 500px !important;
+        border-radius: 50px !important;
+        border: 1px solid var(--border) !important;
+        padding: 10px 20px !important;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
     }
-
+    
+    [data-theme="dark"] .navbar {
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
+    }
+    
     .nav-slider {
-        /* Rounds the slider block to match the pill */
-        top: 10px; 
-        bottom: 10px;
-        border-radius: 40px;
+        top: 10px !important; 
+        bottom: 10px !important;
+        border-radius: 40px !important;
     }
-
+    
     .nav-item {
-        flex: 1;
         padding: 10px 20px;
+        flex: unset; 
+        flex-grow: 1; /* Distributes tabs evenly inside the pill */
+    }
+    
+    .nav-item span {
+        font-size: 12px;
     }
 }
