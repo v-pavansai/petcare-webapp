@@ -30,7 +30,6 @@
     --font: 'Poppins', sans-serif; 
     --font-display: 'Poppins', sans-serif;
     
-    /* Transparent in light mode */
     --bg-overlay: rgba(255, 255, 255, 0.0); 
     --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); 
   }
@@ -49,7 +48,6 @@
     --blue-light: rgba(96, 165, 250, 0.15);
     --amber-light: rgba(239, 159, 39, 0.15);
     
-    /* Heavily dims the background image in dark mode */
     --bg-overlay: rgba(30, 30, 30, 0.85); 
     --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
@@ -107,35 +105,47 @@
   /* --- PC OVERRIDES (Triggered ONLY on PCs/Tablets > 768px) --- */
   @media (min-width: 768px) {
       .phone {
-          /* SEAMLESS BACKGROUND FIX */
-          background-color: #ffffff; /* Base matches the image's pure white bg */
+          background-color: #ffffff; 
           background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png'); 
           background-position: center;
-          /* Cover stretches the gradient tint, Contain stops the image from zooming! */
           background-size: cover, contain; 
           background-repeat: no-repeat;
-          
           align-items: center; 
           justify-content: center;
       }
 
+      /* FIX: The topbar becomes the TOP half of the unified login card */
+      .topbar {
+          position: relative; 
+          width: 100%; 
+          max-width: 420px;
+          background-color: var(--surface);
+          border: 1px solid var(--border);
+          border-bottom: none; /* Connects seamlessly to content */
+          border-radius: 24px 24px 0 0; /* Rounds only the top corners */
+          padding: 20px 25px 0 25px;
+          box-shadow: 0 -10px 30px rgba(0,0,0,0.05); /* Soft shadow for top edge */
+      }
+
+      /* FIX: The content becomes the BOTTOM half of the unified login card */
       .content {
           max-width: 420px;
           flex: none; 
-          padding: 35px 25px;
-          border-radius: 24px;
+          /* Shifts credentials UP by reducing top padding to 0 */
+          padding: 0px 25px 35px 25px; 
+          border-radius: 0 0 24px 24px; /* Rounds only the bottom corners */
           background-color: var(--surface); 
           border: 1px solid var(--border);
-          box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+          border-top: none; /* Connects seamlessly to topbar */
+          box-shadow: 0 15px 35px rgba(0,0,0,0.15); /* Shadow for bottom edge */
       }
       
-      .card {
-          border: none; box-shadow: none; background: transparent; padding: 10px 0 0 0;
+      .header-logo {
+          margin-top: -10px; /* Pulls logo slightly higher */
       }
 
-      .topbar {
-          /* FIX: Added width: 100% so it perfectly spans the top and pushes the moon icon to the far right edge! */
-          position: absolute; top: 0; left: 0; right: 0; width: 100%; padding: 25px 40px;
+      .card {
+          border: none; box-shadow: none; background: transparent; padding: 10px 0 0 0;
       }
   }
   
