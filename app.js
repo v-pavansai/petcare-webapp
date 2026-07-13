@@ -1407,3 +1407,27 @@ window.addEventListener('resize', () => {
     const activeNav = document.querySelector('.nav-item.active');
     if (activeNav) updateNavSlider(activeNav);
 });
+// --- NAVBAR SLIDER LOGIC ---
+function updateNavSlider(activeElement) {
+    const slider = document.querySelector('.nav-slider');
+    if (slider && activeElement) {
+        slider.style.opacity = '1'; // Makes it visible
+        // Calculates exact width and position to wrap the active icon
+        slider.style.width = activeElement.offsetWidth + 'px';
+        slider.style.left = activeElement.offsetLeft + 'px';
+    }
+}
+
+// 1. Move slider when the page first loads
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const initialActive = document.querySelector('.nav-item.active');
+        if (initialActive) updateNavSlider(initialActive);
+    }, 150);
+});
+
+// 2. Keep slider aligned if the user resizes their PC window
+window.addEventListener('resize', () => {
+    const currentActive = document.querySelector('.nav-item.active');
+    if (currentActive) updateNavSlider(currentActive);
+});
