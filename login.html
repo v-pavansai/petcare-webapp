@@ -76,7 +76,6 @@
       flex: 1; overflow-y: auto; 
       padding: 30px 24px 24px; 
       display: flex; flex-direction: column; 
-      /* FIX: Pushes the logo and form up instead of floating in the middle */
       justify-content: flex-start; 
       align-items: center; width: 100%;
   }
@@ -108,16 +107,19 @@
   /* --- PC OVERRIDES (Triggered ONLY on PCs/Tablets > 768px) --- */
   @media (min-width: 768px) {
       .phone {
-          /* FIX: Background moved here so it sees Dark Mode. Used "contain" to fix zoom. */
+          /* SEAMLESS BACKGROUND FIX */
+          background-color: #ffffff; /* Base matches the image's pure white bg */
           background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png'); 
-          background-size: contain; 
+          background-position: center;
+          /* Cover stretches the gradient tint, Contain stops the image from zooming! */
+          background-size: cover, contain; 
           background-repeat: no-repeat;
+          
           align-items: center; 
           justify-content: center;
       }
 
       .content {
-          /* Transforms the mobile content area into the physical PC card */
           max-width: 420px;
           flex: none; 
           padding: 35px 25px;
@@ -128,13 +130,12 @@
       }
       
       .card {
-          /* Cleans up the inner card so it doesn't double-box */
           border: none; box-shadow: none; background: transparent; padding: 10px 0 0 0;
       }
 
       .topbar {
-          /* Floats the dark mode button at the top corner */
-          position: absolute; top: 0; left: 0; right: 0;
+          /* FIX: Added width: 100% so it perfectly spans the top and pushes the moon icon to the far right edge! */
+          position: absolute; top: 0; left: 0; right: 0; width: 100%; padding: 25px 40px;
       }
   }
   
