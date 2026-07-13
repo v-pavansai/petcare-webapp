@@ -143,3 +143,38 @@
       display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
       background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; animation: fadeIn 0.2s;
   }
+  /* --- PC MAIN APP & PILL NAVBAR --- */
+@media (min-width: 768px) {
+    .content {
+        /* Centers main app content and stops it from stretching infinitely */
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 120px; /* Ensures content doesn't hide behind the floating pill */
+    }
+    
+    .navbar {
+        /* Converts the full-width bottom bar into a floating pill */
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        min-width: 500px;
+        border-radius: 50px;
+        border: 1px solid var(--border);
+        padding: 10px 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border-top: none; 
+    }
+
+    .nav-slider {
+        /* Rounds the slider block to match the pill */
+        top: 10px; 
+        bottom: 10px;
+        border-radius: 40px;
+    }
+
+    .nav-item {
+        flex: 1;
+        padding: 10px 20px;
+    }
+}
