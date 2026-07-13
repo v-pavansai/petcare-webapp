@@ -114,31 +114,30 @@
           justify-content: center;
       }
 
-      /* FIX: The Zero-Height Overflow Trick */
+      /* FIX: Breaks the topbar out of the card and pins it to the screen edge */
       .topbar {
-          position: relative !important;
-          z-index: 99 !important; /* Forces it to the very front */
-          width: 100%; 
-          max-width: 420px;
-          height: 0 !important; /* Takes up no physical vertical space */
-          min-height: 0 !important;
+          position: absolute !important;
+          top: 30px !important;
+          right: 40px !important;
+          left: auto !important;
+          width: auto !important;
+          max-width: none !important;
           padding: 0 !important;
-          margin: 0 !important;
           background: transparent !important;
           border: none !important;
           box-shadow: none !important;
+          z-index: 99 !important;
       }
       
-      /* Nudges the button inside the boundaries of the card below it */
+      /* Resets any translation applied previously */
       .top-actions {
-          transform: translate(-15px, 20px);
+          transform: none !important;
       }
 
       .content {
           max-width: 420px;
           width: 100%;
           flex: none; 
-          /* Top padding set to 40px to give the logo breathing room under the button */
           padding: 40px 25px 35px 25px; 
           border-radius: 24px;
           background-color: var(--surface); 
