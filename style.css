@@ -292,7 +292,7 @@
     .content {
         padding-top: 60px !important;
         padding-bottom: 140px !important; /* Room for the higher floating pill */
-        max-width: 90% !important; /* Takes much more horizontal space */
+        max-width: 800px !important; /* Exactly matches the mockup's horizontal spacing */
         margin: 0 auto; 
     }
     
@@ -349,12 +349,13 @@
         width: 100% !important;
     }
 
-    /* Makes the pet cards larger, rounder, and adds a desktop hover effect */
+    /* Matches the mockup's wide, rounded pet cards */
     .pet-item {
-        padding: 16px 20px !important; 
-        border-radius: 16px !important;
-        margin-bottom: 0 !important; /* Handled by grid gap now */
+        padding: 20px !important; 
+        border-radius: 30px !important; /* High rounding from mockup */
+        margin-bottom: 15px !important;
         transition: transform 0.2s, box-shadow 0.2s !important;
+        width: 100% !important;
     }
     
     .pet-item:hover {
@@ -377,27 +378,18 @@
         font-size: 14px !important;
     }
 
-    /* Adjust Add pet button on home */
+    /* Matches the mockup's wide, pill-shaped ADD NEW PET button */
     #home .btn-outline {
-        width: auto !important;
-        min-width: 280px !important;
-        padding: 16px !important;
-        font-size: 15px !important;
-        border-radius: 16px !important;
-        margin-top: 20px !important;
-    }
-    
-    /* Better grid for lists on PC */
-    #dynamic-pet-list, #vax-pet-list, #clinic-list, #notification-list, #vax-schedule-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
         width: 100% !important;
+        padding: 20px !important;
+        font-size: 16px !important;
+        border-radius: 40px !important; /* Pill-shaped like mockup */
+        margin-top: 10px !important;
     }
     
-    /* Center and constrain forms on PC */
+    /* Ensure forms take full width of the container */
     #add-pet-form, #diet .card, #detect-text-container, #vax-add-view {
-        max-width: 800px; 
+        max-width: 100%; 
         margin: 0 auto;
         width: 100%;
     }
