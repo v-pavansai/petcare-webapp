@@ -306,7 +306,7 @@
   </div>
 
   <div id="pet-action-modal" class="modal-overlay" style="display: none;">
-      <div class="card" style="width: 85%; padding: 20px; border: 2px solid var(--blue);">
+      <div class="card" style="width: 85%; max-width: 350px; padding: 20px; border: 2px solid var(--blue);">
           <h3 id="modal-pet-name" style="text-align: center; margin-bottom: 15px; font-family: var(--font-display); color: var(--pawcare-brand);">Pet Name</h3>
           <p style="text-align: center; color: var(--text-2); font-size: 13px; margin-bottom: 20px;">What would you like to do?</p>
           
@@ -320,7 +320,7 @@
   </div>
   
   <div id="update-pet-modal" class="modal-overlay" style="display: none;">
-      <div class="card" style="width: 85%; padding: 20px; border: 2px solid var(--blue);">
+      <div class="card" style="width: 85%; max-width: 400px; padding: 20px; border: 2px solid var(--blue);">
           <div class="sec-label" style="margin: 0 0 15px 0; color: var(--blue); text-align: center;">Update Pet Details</div>
 
           <select id="update-pet-type" onchange="updateBreedsForEdit()" style="margin-bottom: 15px;">
@@ -350,7 +350,7 @@
   </div>
 
   <div id="edit-username-modal" class="modal-overlay" style="display: none;">
-      <div class="card" style="width: 85%; padding: 20px; border: 2px solid var(--blue);">
+      <div class="card" style="width: 85%; max-width: 350px; padding: 20px; border: 2px solid var(--blue);">
           <div class="sec-label" style="margin: 0 0 15px 0; color: var(--blue); text-align: center;">Edit Username</div>
           
           <input type="text" id="new-username-input" placeholder="Enter new username" style="margin-bottom: 5px;" />
@@ -372,14 +372,14 @@
   </div>
 
   <div id="app-confirm-modal" class="modal-overlay" style="display: none; z-index: 999999;">
-      <div class="card" style="width: 80%; max-width: 320px; padding: 25px 20px; text-align: center; border: 2px solid var(--amber-dark); box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-          <div style="font-size: 48px; color: var(--amber-dark); margin-bottom: 15px;">
+      <div class="card" style="width: 80%; max-width: 320px; padding: 25px 20px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+          <div style="display: none; font-size: 48px; color: var(--amber-dark); margin-bottom: 15px;">
               <i class="ti ti-alert-triangle"></i>
           </div>
           <div id="app-confirm-message" style="color: var(--text); font-size: 15px; margin-bottom: 25px; line-height: 1.5; font-weight: 500;">Delete your account permanently?</div>
           <div style="display: flex; gap: 10px;">
               <button class="btn btn-outline" style="flex: 1; font-weight: bold;" onclick="closeAppConfirm()">No</button>
-              <button class="btn btn-primary" id="app-confirm-yes-btn" style="flex: 1; background: #e93434; border: none; font-weight: bold;" onclick="executeAppConfirm()">Yes</button>
+              <button class="btn btn-primary" id="app-confirm-yes-btn" style="flex: 1; background: #d66d6d; border: none; font-weight: bold;" onclick="executeAppConfirm()">Yes</button>
           </div>
       </div>
   </div>
