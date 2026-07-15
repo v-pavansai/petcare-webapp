@@ -346,7 +346,6 @@
       /* --- Retaining inner element styling to match the previous UI mockup --- */
       .screen {
           width: 100%;
-          align-items: flex-start; /* Forces items to align left */
       }
       #home > div {
           width: 100%; /* Forces the home wrapper to expand fully */
@@ -379,7 +378,7 @@
       .pet-type {
           font-size: 14px;
       }
-      #home .btn-outline {
+      #home > div > .btn-outline {
           width: 100%;
           padding: 20px;
           font-size: 16px;
