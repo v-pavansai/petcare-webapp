@@ -292,8 +292,17 @@
     .content {
         padding-top: 60px !important;
         padding-bottom: 140px !important; /* Room for the higher floating pill */
-        max-width: 1200px !important; /* Expanded horizontally */
-        margin: 0 auto; /* Keeps the main content perfectly centered */
+        max-width: 90% !important; /* Takes much more horizontal space */
+        margin: 0 auto; 
+    }
+    
+    .screen {
+        width: 100% !important;
+        align-items: flex-start !important; /* Forces items to align left */
+    }
+
+    #home > div {
+        width: 100% !important; /* Forces the home wrapper to expand fully */
     }
     
     /* FIX: The perfectly centered, floating pill navbar */
@@ -332,15 +341,17 @@
         font-size: 12px;
     }
 
-    /* Scales up the Section Labels (e.g., "Your Pets") */
+    /* Scales up the Section Labels and ensures they are left aligned */
     .sec-label {
-        font-size: 22px !important; /* Slightly reduced */
+        font-size: 22px !important; 
         margin-bottom: 20px !important;
+        text-align: left !important;
+        width: 100% !important;
     }
 
     /* Makes the pet cards larger, rounder, and adds a desktop hover effect */
     .pet-item {
-        padding: 16px 20px !important; /* Slightly reduced */
+        padding: 16px 20px !important; 
         border-radius: 16px !important;
         margin-bottom: 0 !important; /* Handled by grid gap now */
         transition: transform 0.2s, box-shadow 0.2s !important;
@@ -353,24 +364,27 @@
 
     /* Enlarges the pet icon and text */
     .pet-icon {
-        width: 50px !important; /* Slightly reduced */
+        width: 50px !important; 
         height: 50px !important; 
         font-size: 24px !important;
     }
     
     .pet-name {
-        font-size: 18px !important; /* Slightly reduced */
+        font-size: 18px !important; 
     }
 
     .pet-type {
         font-size: 14px !important;
     }
 
-    /* Enlarges the "Add a new pet" button */
-    .btn-outline {
-        padding: 16px !important; /* Slightly reduced */
+    /* Adjust Add pet button on home */
+    #home .btn-outline {
+        width: auto !important;
+        min-width: 280px !important;
+        padding: 16px !important;
         font-size: 15px !important;
         border-radius: 16px !important;
+        margin-top: 20px !important;
     }
     
     /* Better grid for lists on PC */
@@ -378,11 +392,13 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 20px;
+        width: 100% !important;
     }
     
-    /* Center and constrain forms on PC so they don't stretch the full 1200px */
+    /* Center and constrain forms on PC */
     #add-pet-form, #diet .card, #detect-text-container, #vax-add-view {
-        max-width: 800px; /* Expanded horizontally */
+        max-width: 800px; 
         margin: 0 auto;
+        width: 100%;
     }
 }
