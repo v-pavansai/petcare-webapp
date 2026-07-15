@@ -143,176 +143,57 @@
       background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: center; animation: fadeIn 0.2s;
   }
   /* --- DESKTOP SPECIFIC LAYOUT (Floating Pill & Full Header) --- */
-@media (min-width: 768px) {
-    .topbar {
-        padding: 20px 50px;
-    }
-    .appname { font-size: 28px; }
-    
-    .content {
-        padding-top: 60px !important;
-        padding-bottom: 140px !important; /* Room for the higher floating pill */
-        max-width: 800px !important; /* Exactly matches the mockup's horizontal spacing */
-        margin: 0 auto; 
-    }
-    
-    .screen {
-        width: 100% !important;
-        align-items: flex-start !important; /* Forces items to align left */
-    }
+/* --- PC OVERRIDES (The Centered Floating Card Layout) --- */
+  @media (min-width: 768px) {
+      .phone {
+          background-color: #ffffff; 
+          background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png'); 
+          background-position: center;
+          background-size: cover; 
+          background-repeat: no-repeat;
+          align-items: center; /* Centers vertically */
+          justify-content: center; /* Centers horizontally */
+          flex-direction: column; /* Restores standard stacking */
+      }
 
-    #home > div {
-        width: 100% !important; /* Forces the home wrapper to expand fully */
-    }
-    
-    /* FIX: The perfectly centered, floating pill navbar */
-    .navbar {
-        position: fixed !important; 
-        bottom: 45px !important; /* Lifted slightly higher */
-        left: 50% !important; /* Moves it to the exact middle */
-        right: auto !important; /* Un-sticks it from the right edge */
-        transform: translateX(-50%) !important; /* Perfectly balances the center weight */
-        
-        width: auto !important;
-        min-width: 500px !important;
-        border-radius: 50px !important;
-        border: 1px solid var(--border) !important;
-        padding: 10px 20px !important;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
-    }
-    
-    [data-theme="dark"] .navbar {
-        box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
-    }
-    
-    .nav-slider {
-        top: 10px !important; 
-        bottom: 10px !important;
-        border-radius: 40px !important;
-    }
-    
-    .nav-item {
-        padding: 10px 20px;
-        flex: unset; 
-        flex-grow: 1; /* Distributes tabs evenly inside the pill */
-    }
-    
-    .nav-item span {
-        font-size: 12px;
-    }
+      /* Pins the toggle to the top right of the whole screen */
+      .topbar {
+          position: absolute !important;
+          top: 30px !important;
+          right: 40px !important;
+          left: auto !important;
+          width: auto !important;
+          max-width: none !important;
+          padding: 0 !important;
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          z-index: 99 !important;
+      }
+      
+      .top-actions {
+          transform: none !important;
+      }
 
-    /* Scales up the Section Labels and ensures they are left aligned */
-    .sec-label {
-        font-size: 22px !important; 
-        margin-bottom: 20px !important;
-        text-align: left !important;
-        width: 100% !important;
-    }
+      /* The beautiful floating card in the dead center */
+      .content {
+          max-width: 420px; /* Keeps the login form a nice compact size */
+          width: 100%;
+          flex: none; 
+          margin: 0; /* Removes any leftover split-screen margins */
+          padding: 40px 25px 35px 25px; 
+          border-radius: 24px;
+          background-color: var(--surface); 
+          border: 1px solid var(--border);
+          box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+          position: relative;
+          z-index: 10;
+      }
 
-    /* Matches the mockup's wide, rounded pet cards */
-    .pet-item {
-        padding: 20px !important; 
-        border-radius: 30px !important; /* High rounding from mockup */
-        margin-bottom: 15px !important;
-        transition: transform 0.2s, box-shadow 0.2s !important;
-        width: 100% !important;
-    }
-    
-    .pet-item:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
-    }
-
-    /* Enlarges the pet icon and text */
-    .pet-icon {
-        width: 50px !important; 
-        height: 50px !important; 
-        font-size: 24px !important;
-    }
-    
-    .pet-name {
-        font-size: 18px !important; 
-    }
-
-    .pet-type {
-        font-size: 14px !important;
-    }
-
-    /* Matches the mockup's wide, pill-shaped ADD NEW PET button */
-    #home .btn-outline {
-        width: 100% !important;
-        padding: 20px !important;
-        font-size: 16px !important;
-        border-radius: 40px !important; /* Pill-shaped like mockup */
-        margin-top: 10px !important;
-    }
-    
-    /* Ensure forms take full width of the container */
-    #add-pet-form, #diet .card, #detect-text-container, #vax-add-view {
-        max-width: 100%; 
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    /* Arrange pet / list style content in a responsive grid so it doesn't
-       stretch into one long thin column on wide screens */
-    #dynamic-pet-list,
-    #vax-pet-list,
-    #notification-list,
-    #clinic-list {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
-        gap: 15px !important;
-    }
-
-    #dynamic-pet-list .pet-item,
-    #vax-pet-list .pet-item,
-    #notification-list > div,
-    #clinic-list > div {
-        margin-bottom: 0 !important;
-    }
-
-    /* Give the Add-Pet / Add-Vaccine inline forms a comfortable max width
-       instead of spanning the full content area */
-    #add-pet-form, #vax-add-view {
-        max-width: 480px !important;
-    }
-
-    /* Bigger, more comfortable camera / upload preview area on desktop */
-    #camera-feed, #camera-snapshot, #upload-preview {
-        height: 340px !important;
-    }
-
-    #detect-cam-container, #detect-upload-container {
-        max-width: 480px;
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    /* Larger map on desktop */
-    #map {
-        height: 340px !important;
-    }
-
-    /* Vaccine stat cards get a little more breathing room */
-    #vax-stats-container {
-        max-width: 480px;
-    }
-
-    /* Keep modal dialogs a sensible fixed width instead of 85% of a huge screen */
-    #pet-action-modal .card,
-    #update-pet-modal .card,
-    #edit-username-modal .card {
-        width: 100% !important;
-        max-width: 420px !important;
-    }
-
-    /* Profile screen: keep settings list from over-stretching */
-    #profile > div[style*="flex-direction: column"] {
-        max-width: 480px;
-    }
-}
-
+      .card {
+          border: none; box-shadow: none; background: transparent; padding: 10px 0 0 0;
+      }
+  }
 /* --- LARGER DESKTOP SCREENS --- */
 @media (min-width: 1200px) {
     .content {
