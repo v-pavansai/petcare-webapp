@@ -14,7 +14,6 @@
     --radius: 14px; --radius-sm: 8px;
     --font: 'Poppins', sans-serif; 
     --font-display: 'Poppins', sans-serif;
-    --bg-overlay: rgba(255, 255, 255, 0.0);
   }
 
 [data-theme="dark"] {
@@ -29,7 +28,6 @@
     --blue-dark: #537295; 
     --blue-light: rgba(96, 165, 250, 0.15);
     --amber-light: rgba(239, 159, 39, 0.15);
-    --bg-overlay: rgba(30, 30, 30, 0.85);
   }
   
   /* --- GLOBAL STYLES --- */
@@ -147,42 +145,16 @@
   }
   /* --- DESKTOP SPECIFIC LAYOUT (Floating Pill & Full Header) --- */
 @media (min-width: 768px) {
-    .phone {
-        background-color: var(--bg); 
-        background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('bg_pc.png'); 
-        background-position: center;
-        background-size: cover, contain; 
-        background-repeat: no-repeat;
-    }
-
     .topbar {
         padding: 20px 50px;
-        background: transparent !important;
-        position: absolute;
-        width: 100%;
-        max-width: 800px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
     }
-    
     .appname { font-size: 28px; }
     
     .content {
-        padding-top: 80px !important;
-        padding-bottom: 140px !important; /* Room for the higher floating pill */
-        padding-left: 40px !important;
-        padding-right: 40px !important;
-        max-width: 800px !important;
+        padding-top: 40px;
+        padding-bottom: 140px; /* Room for the higher floating pill */
+        max-width: 800px;
         margin: 0 auto; /* Keeps the main content perfectly centered */
-        background: var(--surface);
-        border-left: 1px solid var(--border);
-        border-right: 1px solid var(--border);
-        box-shadow: 0 0 30px rgba(0,0,0,0.1);
-    }
-    
-    [data-theme="dark"] .content {
-        box-shadow: 0 0 30px rgba(0,0,0,0.4);
     }
     
     /* FIX: The perfectly centered, floating pill navbar */
@@ -220,6 +192,12 @@
     .nav-item span {
         font-size: 12px;
     }
+    /* --- PC CONTENT SCALING --- */
+    /* Widens the main container so it doesn't look cramped */
+    .content {
+        max-width: 1000px !important; 
+        padding-top: 60px !important;
+    }
 
     /* Scales up the Section Labels (e.g., "Your Pets") */
     .sec-label {
@@ -231,20 +209,13 @@
     .pet-item {
         padding: 20px 30px !important;
         border-radius: 20px !important;
-        margin-bottom: 0 !important;
+        margin-bottom: 20px !important;
         transition: transform 0.2s, box-shadow 0.2s !important;
     }
     
     .pet-item:hover {
         transform: translateY(-4px);
         box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
-    }
-    
-    /* Better grid for lists */
-    #dynamic-pet-list, #vax-pet-list, #clinic-list, #notification-list, #vax-schedule-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
     }
 
     /* Enlarges the pet icon and text */
@@ -267,11 +238,5 @@
         padding: 20px !important;
         font-size: 16px !important;
         border-radius: 20px !important;
-    }
-    
-    /* Center and constrain forms on PC */
-    #add-pet-form, #diet .card, #detect-text-container, #vax-add-view {
-        max-width: 600px;
-        margin: 0 auto;
     }
 }
